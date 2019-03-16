@@ -10,7 +10,9 @@ public class LightLocalizer{
 	private static Odometer odo = null;
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
-	private SampleProvider lightIntensity;
+	private SampleProvider leftLightIntensity;
+	private SampleProvider rightLightIntensity;
+
 	private boolean scanning = true; //Flag of scanning for lines 
 	private final double TRACK; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
@@ -28,17 +30,18 @@ public class LightLocalizer{
 	 * @param TRACK
 	 * @param WHEEL_RAD
 	 */
-	public LightLocalizer(SampleProvider lightIntensity, Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
+	public LightLocalizer(SampleProvider leftLightIntensity, SampleProvider rightLightIntensity, Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			final double TRACK, final double WHEEL_RAD) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.TRACK = TRACK;
 		this.WHEEL_RAD = WHEEL_RAD;
 		LightLocalizer.odo = odo;
-		this.lightIntensity = lightIntensity;
+		this.leftLightIntensity = leftLightIntensity;
+		this.rightLightIntensity = rightLightIntensity;
 		CIRCUMFERENCE = Math.PI * TRACK;
-		leftMotor.setAcceleration(100);
-		rightMotor.setAcceleration(100);
+		leftMotor.setAcceleration(3000);
+		rightMotor.setAcceleration(3000);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 	}
@@ -69,7 +72,7 @@ public class LightLocalizer{
 	 * Extracts data from the light sensor.
 	 * @return
 	 */
-	public double getLightData() {
+	public double getLightData(SampleProvider lightIntensity ) {
 		float [] data = new float[lightIntensity.sampleSize()];
 		double intensity;
 		lightIntensity.fetchSample(data, 0);
@@ -129,84 +132,149 @@ public class LightLocalizer{
 	 */
 	public void localize() {
 		turnTo(45);
-		double preData = getLightData() ;//Gets the tile reflection intensity.
+		// preData1 is the sensor on the left side of the robot
+		double preData1 = getLightData(leftLightIntensity);//Gets the tile reflection intensity.
+		//preData2 is the sensor on the right side of the robot
+		double preData2 = getLightData(rightLightIntensity);
 		int line1=0, line2=0, line3 =0, line4 = 0;//To store tachocounts when robot passing a line.
 		int lineCounter = 0; //Counter indicates how many lines are detected.
 		//Robot moves forward.
 		do {
 			leftMotor.forward();
 			rightMotor.forward();	
-		}while(getLightData() > 0.26);
+		}while(preData1 > 0.26 || preData2 > 0.26);
 		//When it detected a line, it returns by distance between the light sensor and center of rotation.
-		if(getLightData() <= 0.3) {
-			leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
-			rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
+		if(preData1 <= 0.3) {
+			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
+			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
+			leftMotor.stop();
+			do {
+				rightMotor.forward();	
+			}while(preData2 > 0.26);
 		}
+		if(preData2 <= 0.3) {
+			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
+			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
+			rightMotor.stop();
+			do {
+				leftMotor.forward();	
+			}while(preData1 > 0.26);
+		}
+		turnTo(90);
+		do {
+			leftMotor.forward();
+			rightMotor.forward();	
+		}while(preData1 > 0.26 || preData2 > 0.26);
+		//When it detected a line, it returns by distance between the light sensor and center of rotation.
+		if(preData1 <= 0.3) {
+			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
+			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
+			leftMotor.stop();
+			do {
+				rightMotor.forward();	
+			}while(preData2 > 0.26);
+		}
+		if(preData2 <= 0.3) {
+			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
+			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
+			rightMotor.stop();
+			do {
+				leftMotor.forward();	
+			}while(preData1 > 0.26);
+		}
+		turnTo(-90);
+		//odo.setXYT(x, y, theta);
 		//Turn full circle(i.e. 360 degrees)
 		//Immediate return: true. Executing while scanning for lines.
-		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 360), true);
-		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 360), true);
-		//Scanning is initially true.
-		while(scanning) {
-			if(getLightData() - preData < -0.1) {
-				Sound.beep();
-				//If a line is detected, increments by one
-				lineCounter++;	
-			}	
-			switch (lineCounter) {
-			case 1 :
-				leftMotor.resetTachoCount();
-				//Increments again to prevent entering case 1 twice.
-				//We only want reset tachocount once per trial.
-				lineCounter++;
-				break;
-			case 3 :
-				line2 =leftMotor.getTachoCount();
-				//Increments again to prevent entering case 3 twice.
-				lineCounter++;
-				break;
-			case 5 :
-				line3 =leftMotor.getTachoCount();
-				//Increments again to prevent entering case 5 twice.
-				lineCounter++;
-				break;
-			case 7:
-				line4 = leftMotor.getTachoCount();
-				//Increments again to prevent entering case 7 twice.
-				lineCounter++;
-				//Finish scanning, set scanning false
-				scanning = false;
-				break;	
-			default:
-				//Do nothing
-			}	
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-			}
-		}
-		double x = getFinalX(line2,line4); 
-		double y = getFinalY(line1,line3);
-		//There is a bug in sample code OdometerData. When overwriting data, it failed sometimes.
+//		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 360), true);
+//		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 360), true);
+//		//Scanning is initially true.
+//		while(scanning) {
+//			if(getLightData() - preData < -0.1) {
+//				Sound.beep();
+//				//If a line is detected, increments by one
+//				lineCounter++;	
+//			}	
+//			switch (lineCounter) {
+//			case 1 :
+//				leftMotor.resetTachoCount();
+//				//Increments again to prevent entering case 1 twice.
+//				//We only want reset tachocount once per trial.
+//				lineCounter++;
+//				break;
+//			case 3 :
+//				line2 =leftMotor.getTachoCount();
+//				//Increments again to prevent entering case 3 twice.
+//				lineCounter++;
+//				break;
+//			case 5 :
+//				line3 =leftMotor.getTachoCount();
+//				//Increments again to prevent entering case 5 twice.
+//				lineCounter++;
+//				break;
+//			case 7:
+//				line4 = leftMotor.getTachoCount();
+//				//Increments again to prevent entering case 7 twice.
+//				lineCounter++;
+//				//Finish scanning, set scanning false
+//				scanning = false;
+//				break;	
+//			default:
+//				//Do nothing
+//			}	
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//			}
+//		}
+//		double x = getFinalX(line2,line4); 
+//		double y = getFinalY(line1,line3);
+//		//There is a bug in sample code OdometerData. When overwriting data, it failed sometimes.
 		//We assume it happens because the odometer thread hasn't completed updating values when setXYT() is executed.
 		//To solve this, we wait for odometer to finish updating values.
-
-		leftMotor.stop(true);
-		rightMotor.stop(false);
-		do {
-			leftMotor.backward();
-			rightMotor.forward();	
-		}while(getLightData() > 0.26);
-		leftMotor.setAcceleration(3000);
-		rightMotor.setAcceleration(3000);
-		leftMotor.stop(true);
-		rightMotor.stop(false);
-		double theta = Math.toDegrees(Math.atan2(x, CAR_LENGTH));
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
-		setInitialPosition(SC,x,y,theta);
+	
+//		leftMotor.stop(true);
+//		rightMotor.stop(false);
+//		do {
+//			leftMotor.backward();
+//			rightMotor.forward();	
+//		}while(getLightData() > 0.26);
+//		leftMotor.setAcceleration(3000);
+//		rightMotor.setAcceleration(3000);
+//		leftMotor.stop(true);
+//		rightMotor.stop(false);
+//		double theta = Math.toDegrees(Math.atan2(x, CAR_LENGTH));
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//		}
+//		
+//		switch(SC) {
+//		case 0:
+//		odo.setX(TILE_SIZE + x);
+//		odo.setY(TILE_SIZE + y);
+//		break;
+//		case 1:
+//		odo.setX(7*TILE_SIZE + x);
+//		odo.setY(TILE_SIZE + y);
+//		break;
+//		case 2:
+//
+//		odo.setX(7*TILE_SIZE + x);
+//		odo.setY(7*TILE_SIZE + y);
+//		break;
+//		case 3:
+//		odo.setX(TILE_SIZE + x);
+//		odo.setY(7*TILE_SIZE + y);
+//		break;
+//		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//		}
+//		odo.setTheta(theta);
+//		turnTo(0);
+//		odo.setTheta(0);
 	}
 	/**
 	 * This method sets the initial position on odometer.
