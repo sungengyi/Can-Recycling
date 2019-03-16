@@ -6,14 +6,12 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class LightLocalizer{
-	public int SC;
 	private static Odometer odo = null;
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
 	private SampleProvider leftLightIntensity;
 	private SampleProvider rightLightIntensity;
 
-	private boolean scanning = true; //Flag of scanning for lines 
 	private final double TRACK; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
 	private final static double CAR_LENGTH = 12.5; //Distance from center of rotation to light sensor
@@ -79,9 +77,6 @@ public class LightLocalizer{
 		intensity = data[0];
 		return intensity;
 	}
-	public void setSC(int SC){
-		this.SC = SC;
-	}
 	/**
 	 * This method turns the robot heading to the specified angle by taking
 	 * the difference of its original heading and the desired heading.
@@ -131,150 +126,84 @@ public class LightLocalizer{
 	 * 
 	 */
 	public void localize() {
-		turnTo(45);
 		// preData1 is the sensor on the left side of the robot
 		double preData1 = getLightData(leftLightIntensity);//Gets the tile reflection intensity.
-		//preData2 is the sensor on the right side of the robot
-		double preData2 = getLightData(rightLightIntensity);
-		int line1=0, line2=0, line3 =0, line4 = 0;//To store tachocounts when robot passing a line.
-		int lineCounter = 0; //Counter indicates how many lines are detected.
 		//Robot moves forward.
 		do {
 			leftMotor.forward();
 			rightMotor.forward();	
-		}while(preData1 > 0.26 || preData2 > 0.26);
+			//System.out.println("forward");
+		}while(getLightData(leftLightIntensity) > 0.26 && getLightData(rightLightIntensity) > 0.26);
+		//!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)
 		//When it detected a line, it returns by distance between the light sensor and center of rotation.
-		if(preData1 <= 0.3) {
-			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
-			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
-			leftMotor.stop();
-			do {
-				rightMotor.forward();	
-			}while(preData2 > 0.26);
-		}
-		if(preData2 <= 0.3) {
-			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
-			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
-			rightMotor.stop();
-			do {
-				leftMotor.forward();	
-			}while(preData1 > 0.26);
-		}
-		turnTo(90);
-		do {
-			leftMotor.forward();
-			rightMotor.forward();	
-		}while(preData1 > 0.26 || preData2 > 0.26);
-		//When it detected a line, it returns by distance between the light sensor and center of rotation.
-		if(preData1 <= 0.3) {
-			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
-			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
-			leftMotor.stop();
-			do {
-				rightMotor.forward();	
-			}while(preData2 > 0.26);
-		}
-		if(preData2 <= 0.3) {
-			//leftMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), true);
-			//rightMotor.rotate(-convertDistance(WHEEL_RAD, CAR_LENGTH), false);
-			rightMotor.stop();
-			do {
-				leftMotor.forward();	
-			}while(preData1 > 0.26);
-		}
-		turnTo(-90);
-		//odo.setXYT(x, y, theta);
-		//Turn full circle(i.e. 360 degrees)
-		//Immediate return: true. Executing while scanning for lines.
-//		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 360), true);
-//		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 360), true);
-//		//Scanning is initially true.
-//		while(scanning) {
-//			if(getLightData() - preData < -0.1) {
-//				Sound.beep();
-//				//If a line is detected, increments by one
-//				lineCounter++;	
-//			}	
-//			switch (lineCounter) {
-//			case 1 :
-//				leftMotor.resetTachoCount();
-//				//Increments again to prevent entering case 1 twice.
-//				//We only want reset tachocount once per trial.
-//				lineCounter++;
-//				break;
-//			case 3 :
-//				line2 =leftMotor.getTachoCount();
-//				//Increments again to prevent entering case 3 twice.
-//				lineCounter++;
-//				break;
-//			case 5 :
-//				line3 =leftMotor.getTachoCount();
-//				//Increments again to prevent entering case 5 twice.
-//				lineCounter++;
-//				break;
-//			case 7:
-//				line4 = leftMotor.getTachoCount();
-//				//Increments again to prevent entering case 7 twice.
-//				lineCounter++;
-//				//Finish scanning, set scanning false
-//				scanning = false;
-//				break;	
-//			default:
-//				//Do nothing
-//			}	
-//			try {
-//				Thread.sleep(10);
-//			} catch (InterruptedException e) {
-//			}
+		System.out.println("forward done");
+//		if(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
+//			leftMotor.stop();
+//			System.out.println("turn left");
+//
+//			do {
+//				rightMotor.forward();	
+//			}while(!lineDetected(preData1,leftLightIntensity));
+//			//leftMotor.forward();
+//
 //		}
-//		double x = getFinalX(line2,line4); 
-//		double y = getFinalY(line1,line3);
-//		//There is a bug in sample code OdometerData. When overwriting data, it failed sometimes.
-		//We assume it happens because the odometer thread hasn't completed updating values when setXYT() is executed.
-		//To solve this, we wait for odometer to finish updating values.
-	
+		while(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
+			leftMotor.stop(false);
+			rightMotor.forward();	
+		}
 //		leftMotor.stop(true);
 //		rightMotor.stop(false);
-//		do {
-//			leftMotor.backward();
-//			rightMotor.forward();	
-//		}while(getLightData() > 0.26);
-//		leftMotor.setAcceleration(3000);
-//		rightMotor.setAcceleration(3000);
-//		leftMotor.stop(true);
-//		rightMotor.stop(false);
-//		double theta = Math.toDegrees(Math.atan2(x, CAR_LENGTH));
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
+//		if(!lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity) ) {
+//			rightMotor.stop();
+//			System.out.println("turn right");
+//
+//			do {
+//				leftMotor.forward();	
+//			}while(!lineDetected(preData1,leftLightIntensity));
+//			rightMotor.forward();
+//
+//		}else {
+//			
+//		}
+//		if(lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity)) {
+//			System.out.println("turn 90");
+//
+//			turnTo(90);
 //		}
 //		
-//		switch(SC) {
-//		case 0:
-//		odo.setX(TILE_SIZE + x);
-//		odo.setY(TILE_SIZE + y);
-//		break;
-//		case 1:
-//		odo.setX(7*TILE_SIZE + x);
-//		odo.setY(TILE_SIZE + y);
-//		break;
-//		case 2:
-//
-//		odo.setX(7*TILE_SIZE + x);
-//		odo.setY(7*TILE_SIZE + y);
-//		break;
-//		case 3:
-//		odo.setX(TILE_SIZE + x);
-//		odo.setY(7*TILE_SIZE + y);
-//		break;
+//		do {
+//			leftMotor.forward();
+//			rightMotor.forward();	
+//		}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity));
+//		//When it detected a line, it returns by distance between the light sensor and center of rotation.
+//		
+//		if(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
+//			leftMotor.stop();
+//			do {
+//				rightMotor.forward();	
+//			}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity));
 //		}
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
+//		if(!lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity) ) {
+//			rightMotor.stop();
+//			do {
+//				leftMotor.forward();	
+//			}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity) );
 //		}
-//		odo.setTheta(theta);
-//		turnTo(0);
-//		odo.setTheta(0);
+//		if(lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity)) {
+//			turnTo(-90);
+//		}
+//		
+	}
+	public boolean lineDetected(double data,SampleProvider lightIntensity) {
+		if(data -  getLightData(lightIntensity) <= 0.3) {
+			System.out.print("true");
+
+			return true;
+		}else { 
+			System.out.print("fasle");
+
+			return false;	
+		}
 	}
 	/**
 	 * This method sets the initial position on odometer.

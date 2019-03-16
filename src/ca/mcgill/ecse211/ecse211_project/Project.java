@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.ecse211_project;
 
 import ca.mcgill.ecse211.color.Display;
+import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.localizer.UltrasonicLocalizer;
 import ca.mcgill.ecse211.navigator.ObstacleAvoidanceException;
 import ca.mcgill.ecse211.odometer.Odometer;
@@ -53,13 +54,13 @@ public class Project {
 
 		@SuppressWarnings("resource")
 		SensorModes rightLightSensor = new EV3ColorSensor(rightLightPort);//lightSensor is the instance 
-		SampleProvider  rightLightIntensity = rightLightSensor.getMode("RGB");
+		SampleProvider  rightLightIntensity = rightLightSensor.getMode("Red");
 
 		// Odometer related objects
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 
 		//Instances of localizers
-		//LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
+		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightIntensity, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		UltrasonicLocalizer usLocal = new UltrasonicLocalizer (frontUSDistance, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		//ColorData color = new ColorData(rightLightIntensity);
 		//Display onto the screen
@@ -84,7 +85,8 @@ public class Project {
 		//Odometer display
 		Thread odoDisplay = new Thread(odometryDisplay);
 		odoDisplay.start();
-		usLocal.fallingEdge();
+		//usLocal.fallingEdge();
+		lightLocal.localize();
 		
 	}
 }
