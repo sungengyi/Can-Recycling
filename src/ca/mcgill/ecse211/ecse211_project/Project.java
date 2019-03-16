@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.ecse211_project;
 
 import ca.mcgill.ecse211.color.Display;
+import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.localizer.UltrasonicLocalizer;
 import ca.mcgill.ecse211.navigator.ObstacleAvoidanceException;
 import ca.mcgill.ecse211.odometer.Odometer;
@@ -59,7 +60,7 @@ public class Project {
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 
 		//Instances of localizers
-		//LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
+		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightSensor, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		UltrasonicLocalizer usLocal = new UltrasonicLocalizer (frontUSDistance, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		//ColorData color = new ColorData(rightLightIntensity);
 		//Display onto the screen

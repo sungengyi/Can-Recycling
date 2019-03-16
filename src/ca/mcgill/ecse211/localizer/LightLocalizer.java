@@ -4,7 +4,7 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
-
+import ca.mcgill.ecse211.*;
 public class LightLocalizer{
 	public int SC;
 	private static Odometer odo = null;
@@ -131,7 +131,7 @@ public class LightLocalizer{
 	 * 
 	 */
 	public void localize() {
-		turnTo(45);
+//		turnTo(45);
 		// preData1 is the sensor on the left side of the robot
 		double preData1 = getLightData(leftLightIntensity);//Gets the tile reflection intensity.
 		//preData2 is the sensor on the right side of the robot
