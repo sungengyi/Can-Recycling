@@ -64,7 +64,7 @@ public class ObstacleAvoidance implements Runnable {
 	private static final double T_y = Project.T_y; // y coordinate of the ring tree
 
 
-	public ObstacleAvoidance(SampleProvider usDistance, ColorData color, int TR,int[][] arr, Odometer odo, EV3LargeRegulatedMotor leftMotor,
+	public ObstacleAvoidance(int[][] arr, Odometer odo, EV3LargeRegulatedMotor leftMotor,
 			EV3LargeRegulatedMotor rightMotor, final double TRACK, final double WHEEL_RAD) {
 		this.odo = odo;
 		this.leftMotor = leftMotor;
@@ -72,7 +72,6 @@ public class ObstacleAvoidance implements Runnable {
 		this.TRACK = TRACK;
 		//		this.WHEEL_RAD = WHEEL_RAD;
 		this.arr = arr;
-		this.usDistance = usDistance;
 		this.done = false;
 	}
 
@@ -86,13 +85,13 @@ public class ObstacleAvoidance implements Runnable {
 	 * @throws OdometerExceptions
 	 * @throws ObstacleAvoidanceException
 	 */
-	public synchronized static ObstacleAvoidance getOA(SampleProvider usDistance, int[][] arr, Odometer odo,
+	public synchronized static ObstacleAvoidance getOA(int[][] arr, Odometer odo,
 			EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, final double TRACK,
 			final double WHEEL_RAD) throws ObstacleAvoidanceException {
 		if (oa != null) { // Return existing object
 			return oa;
 		} else { // create object and return it
-			oa = new ObstacleAvoidance(usDistance, color, TR,arr, odo, leftMotor, rightMotor, TRACK, WHEEL_RAD);
+			oa = new ObstacleAvoidance(arr, odo, leftMotor, rightMotor, TRACK, WHEEL_RAD);
 			return oa;
 		}
 	}
@@ -106,13 +105,9 @@ public class ObstacleAvoidance implements Runnable {
 	 * @param leftmotor2 
 	 * @param odometer 
 	 * @param waypoints 
-	 * @param tR 
-	 * @param color 
-	 * @param usDistance2 
-	 * 
 	 * @return error if no previous odometer exists
 	 */
-	public synchronized static ObstacleAvoidance getOA(SampleProvider usDistance2, ColorData color, int tR, double[][] waypoints, Odometer odometer, EV3LargeRegulatedMotor leftmotor2, EV3LargeRegulatedMotor rightmotor2, double track2, double wheelRad) throws ObstacleAvoidanceException {
+	public synchronized static ObstacleAvoidance getOA(double[][] waypoints, Odometer odometer, EV3LargeRegulatedMotor leftmotor2, EV3LargeRegulatedMotor rightmotor2, double track2, double wheelRad) throws ObstacleAvoidanceException {
 
 		if (oa == null) {
 			throw new ObstacleAvoidanceException("No previous Odometer exits.");
@@ -208,7 +203,7 @@ public class ObstacleAvoidance implements Runnable {
 	 * @param x
 	 * @param y
 	 */
-	public void travelTo(double x, double y) {
+	public static void travelTo(double x, double y) {
 		// is travelTo is called, set isNavigating true
 		double position[] = odo.getXYT();
 		double xCur = position[0], yCur = position[1];
@@ -234,9 +229,9 @@ public class ObstacleAvoidance implements Runnable {
 			distance = usdata[0] * 100.0;
 
 			// obstacle avoidance
-			if (distance < 10) {
-				selector(odo.getXYT());
-			}
+//			if (distance < 10) {
+//				selector(odo.getXYT());
+//			}
 		}
 
 	}
@@ -318,93 +313,94 @@ public class ObstacleAvoidance implements Runnable {
 				rightMotor.setSpeed(0);
 			}
 		}
-
 	}
+
+	
 
 
 
 	/**
 	 * choose object avoidance mode
 	 * @param position
-	 */
-	private void selector(double[] position) {
-		double x, y, t;
-		x = position[0];
-		y = position[1];
-		t = position[2];
-
-		if (t > 315 || t < 45) { // going up
-			if (x < TILE_SIZE) {
-				rightAvoid(); // robot on left side
-			} else {
-				leftAvoid();
-			}
-		} else if(t > 45 && t < 135) { // going right
-			if(y < TILE_SIZE) {
-				leftAvoid(); // robot on lower side
-			} else {
-				rightAvoid(); // robot on upper side
-			}
-		} else if(t > 135 && t < 225) {	// going down
-			if(x < TILE_SIZE) {
-				leftAvoid(); // robot on left side
-			} else {
-				rightAvoid(); // robot on right side
-			}
-		} else if(t > 225 && t < 315) {	// going left
-			if(y < TILE_SIZE) {
-				rightAvoid(); // robot on lower side
-			} else {
-				leftAvoid(); // robot on upper side
-			}
-		} else {
-			// no possible case
-		}
-	}
-
-	/**
-	 * avoid from right
-	 */
-	private void rightAvoid() {
-		leftMotor.stop(true);
-		rightMotor.stop(false);
-
-		leftMotor.setAcceleration(500);
-		rightMotor.setAcceleration(500);
-
-		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), true);
-		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), false);
-
-		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
-		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
-
-		leftMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), true);
-		rightMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), false);
-
-		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
-		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
-	}
-
-	/**
-	 * avoid from left
-	 */
-	private void leftAvoid() {
-		leftMotor.stop(true);
-		rightMotor.stop(false);
-
-		leftMotor.setAcceleration(500);
-		rightMotor.setAcceleration(500);
-
-		leftMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), true);
-		rightMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), false);
-
-		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
-		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
-
-		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), true);
-		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), false);
-
-		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 2), true);
-		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 2), false);
-	}
+//	 */
+//	private void selector(double[] position) {
+//		double x, y, t;
+//		x = position[0];
+//		y = position[1];
+//		t = position[2];
+//
+//		if (t > 315 || t < 45) { // going up
+//			if (x < TILE_SIZE) {
+//				rightAvoid(); // robot on left side
+//			} else {
+//				leftAvoid();
+//			}
+//		} else if(t > 45 && t < 135) { // going right
+//			if(y < TILE_SIZE) {
+//				leftAvoid(); // robot on lower side
+//			} else {
+//				rightAvoid(); // robot on upper side
+//			}
+//		} else if(t > 135 && t < 225) {	// going down
+//			if(x < TILE_SIZE) {
+//				leftAvoid(); // robot on left side
+//			} else {
+//				rightAvoid(); // robot on right side
+//			}
+//		} else if(t > 225 && t < 315) {	// going left
+//			if(y < TILE_SIZE) {
+//				rightAvoid(); // robot on lower side
+//			} else {
+//				leftAvoid(); // robot on upper side
+//			}
+//		} else {
+//			// no possible case
+//		}
+//	}
+//
+//	/**
+//	 * avoid from right
+//	 */
+//	private void rightAvoid() {
+//		leftMotor.stop(true);
+//		rightMotor.stop(false);
+//
+//		leftMotor.setAcceleration(500);
+//		rightMotor.setAcceleration(500);
+//
+//		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), true);
+//		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), false);
+//
+//		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
+//		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
+//
+//		leftMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), true);
+//		rightMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), false);
+//
+//		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
+//		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
+//	}
+//
+//	/**
+//	 * avoid from left
+//	 */
+//	private void leftAvoid() {
+//		leftMotor.stop(true);
+//		rightMotor.stop(false);
+//
+//		leftMotor.setAcceleration(500);
+//		rightMotor.setAcceleration(500);
+//
+//		leftMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), true);
+//		rightMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), false);
+//
+//		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), true);
+//		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 1.5), false);
+//
+//		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90.0), true);
+//		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90.0), false);
+//
+//		leftMotor.rotate(convertDistance(WHEEL_RAD, block * 2), true);
+//		rightMotor.rotate(convertDistance(WHEEL_RAD, block * 2), false);
+//	}
 }
