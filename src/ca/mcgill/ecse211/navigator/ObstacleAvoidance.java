@@ -1,5 +1,5 @@
 package ca.mcgill.ecse211.navigator;
-
+import ca.mcgill.ecse211.ecse211_project.*;
 import java.util.Stack;
 
 import ca.mcgill.ecse211.color.ColorData;
@@ -41,6 +41,28 @@ public class ObstacleAvoidance implements Runnable {
 	private static ColorData color = null;
 
 	private int distError = 0; // error (too close/far from wall)
+
+	private static final double Island_LL_x = Project.Island_LL_x; // x coordinate of the lower left corner of the
+																	// island
+	private static final double Island_LL_y = Project.Island_LL_y; // y coordinate of the lower left corner of the
+																	// island
+	private static final double Island_UR_x = Project.Island_UR_x; // x coordinate of the upper right corner of the
+																	// island
+	private static final double Island_UR_y = Project.Island_UR_y; // y coordinate of the upper right corner of the
+																	// island
+
+	private static final int corner = Project.corner; // the starting corner
+	private static final double LL_x = Project.LL_x; // x coordinate of the lower left corner of the home section
+	private static final double LL_y = Project.LL_y; // y coordinate of the lower left corner of the home section
+	private static final double UR_x = Project.UR_x; // x coordinate of the upper right corner of the home section
+	private static final double UR_y = Project.UR_y; // y coordinate of the upper right corner of the home section
+	private static final double TN_LL_x = Project.TN_LL_x; // x coordinate of the lower left of the tunnel
+	private static final double TN_LL_y = Project.TN_LL_y; // y coordinate of the lower left of the tunnel
+	private static final double TN_UR_x = Project.TN_UR_x; // x coordinate of the upper right of the tunnel
+	private static final double TN_UR_y = Project.TN_UR_y; // y coordinate of the upper right of the tunnel
+	private static final double T_x = Project.T_x; // x coordinate of the ring tree
+	private static final double T_y = Project.T_y; // y coordinate of the ring tree
+
 
 	public ObstacleAvoidance(SampleProvider usDistance, ColorData color, int TR,int[][] arr, Odometer odo, EV3LargeRegulatedMotor leftMotor,
 			EV3LargeRegulatedMotor rightMotor, final double TRACK, final double WHEEL_RAD) {
