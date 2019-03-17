@@ -12,12 +12,13 @@ public class LightLocalizer{
 	private SampleProvider leftLightIntensity;
 	private SampleProvider rightLightIntensity;
 
-	private final double TRACK; //The width of wheel axis
+	private final double TRACK;
+	private static final double SENSOR_GAP = 4; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
 	private final static double CAR_LENGTH = 12.5; //Distance from center of rotation to light sensor
 	private final static double TILE_SIZE = 30.48; //Distance from center of rotation to light sensor
 
-	private static final int ROTATE_SPEED = 100; //Speed of robot
+	private static final int ROTATE_SPEED = 120; //Speed of robot
 	private static double CIRCUMFERENCE; //Circumferencce of wheel axis
 	/**
 	 * Default constructor initializes all fields of LightLocalizer.
@@ -120,89 +121,106 @@ public class LightLocalizer{
 		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), false);
 
 	}
+	public void detect(double left,double right) {
+		do {
+			leftMotor.forward();
+			rightMotor.forward();
+		}while(onNormalField(left, leftLightIntensity)&&onNormalField(right, rightLightIntensity));
+		System.out.println("d1");
+
+	}
+	public void moveForward(double left, double right) {
+
+		System.out.println("b1");
+		leftMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),true);
+		rightMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),false);
+
+
+	}
+	public void turn(double angle) {
+		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, angle), true);
+		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, angle), false);
+	}
+	public void correction(double left, double right) {
+		boolean leftIsOnLine = false,
+				rightIsOnLine = false;
+
+		while(!leftIsOnLine||!rightIsOnLine){
+			if(lineDetected(left, leftLightIntensity) && lineDetected(right, rightLightIntensity)) {
+				leftIsOnLine = true;
+				rightIsOnLine = true;
+				leftMotor.stop(true);
+				rightMotor.stop();
+				System.out.println("break");
+				break;
+			}else {
+				if(!leftIsOnLine) {
+					leftMotor.forward();
+				}
+				if(!rightIsOnLine) {
+					rightMotor.forward();
+				}
+				if(lineDetected(left, leftLightIntensity) && !leftIsOnLine) {
+					System.out.println("case1");
+					leftMotor.stop(true);
+					rightMotor.stop();
+					System.out.println("c1");
+					leftIsOnLine = true;
+					rightMotor.forward();
+					if(lineDetected(left, leftLightIntensity) && rightIsOnLine) {
+						leftMotor.stop(true);
+						rightMotor.stop();
+						break;
+					}
+				}
+				if(lineDetected(right, rightLightIntensity) && !rightIsOnLine) {
+					System.out.println("case2");
+
+					leftMotor.stop(true);
+					rightMotor.stop();
+					System.out.println("c2");
+					rightIsOnLine = true;
+					leftMotor.forward();
+					if(lineDetected(right, rightLightIntensity) && leftIsOnLine) {
+						leftMotor.stop(true);
+						rightMotor.stop();
+						break;
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * This method calculates the robot's x and y position by scanning and detecting for tile lines. Then it moves the robot to head 0 degree.
 	 * 
 	 */
 	public void localize() {
-		// preData1 is the sensor on the left side of the robot
-		double preData1 = getLightData(leftLightIntensity);//Gets the tile reflection intensity.
-		//Robot moves forward.
-		do {
-			leftMotor.forward();
-			rightMotor.forward();	
-			//System.out.println("forward");
-		}while(getLightData(leftLightIntensity) > 0.26 && getLightData(rightLightIntensity) > 0.26);
-		//!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)
-		//When it detected a line, it returns by distance between the light sensor and center of rotation.
-		System.out.println("forward done");
-//		if(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
-//			leftMotor.stop();
-//			System.out.println("turn left");
-//
-//			do {
-//				rightMotor.forward();	
-//			}while(!lineDetected(preData1,leftLightIntensity));
-//			//leftMotor.forward();
-//
-//		}
-		while(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
-			leftMotor.stop(false);
-			rightMotor.forward();	
-		}
-//		leftMotor.stop(true);
-//		rightMotor.stop(false);
-//		if(!lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity) ) {
-//			rightMotor.stop();
-//			System.out.println("turn right");
-//
-//			do {
-//				leftMotor.forward();	
-//			}while(!lineDetected(preData1,leftLightIntensity));
-//			rightMotor.forward();
-//
-//		}else {
-//			
-//		}
-//		if(lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity)) {
-//			System.out.println("turn 90");
-//
-//			turnTo(90);
-//		}
-//		
-//		do {
-//			leftMotor.forward();
-//			rightMotor.forward();	
-//		}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity));
-//		//When it detected a line, it returns by distance between the light sensor and center of rotation.
-//		
-//		if(lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity)) {
-//			leftMotor.stop();
-//			do {
-//				rightMotor.forward();	
-//			}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity));
-//		}
-//		if(!lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity) ) {
-//			rightMotor.stop();
-//			do {
-//				leftMotor.forward();	
-//			}while(!lineDetected(preData1,leftLightIntensity)&&!lineDetected(preData1,rightLightIntensity) );
-//		}
-//		if(lineDetected(preData1,leftLightIntensity)&&lineDetected(preData1,rightLightIntensity)) {
-//			turnTo(-90);
-//		}
-//		
+		leftMotor.setAcceleration(10000);
+		rightMotor.setAcceleration(10000);
+		double left = getLightData(leftLightIntensity);
+		double right = getLightData(rightLightIntensity);
+	//	detect(left,right);
+		correction(left,right);
+		moveForward(left,right);
+		turn(90);
+	//	detect(left,right);
+		correction(left,right);
+		moveForward(left,right);
+		turn(-90);
 	}
-	public boolean lineDetected(double data,SampleProvider lightIntensity) {
-		if(data -  getLightData(lightIntensity) <= 0.3) {
-			System.out.print("true");
-
+	public boolean lineDetected(double fieldReflection,SampleProvider lightIntensity) {
+		if((getLightData(lightIntensity) - fieldReflection) <= - 0.1) {
 			return true;
 		}else { 
-			System.out.print("fasle");
-
 			return false;	
+		}
+	}
+	public boolean onNormalField(double fieldReflection,SampleProvider lightIntensity) {
+		if(Math.abs(getLightData(lightIntensity)- fieldReflection) < 0.03){
+			return true;
+		}else {
+			return false;
 		}
 	}
 	/**

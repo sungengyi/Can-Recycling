@@ -19,14 +19,14 @@ import lejos.robotics.SampleProvider;
 public class Project {
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 15.2;//Width of wheel axis
+	public static final double TRACK = 13.7;//Width of wheel axis
 	public static final double TILE_SIZE = 30.48;
 
 	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static final Port leftLightPort = LocalEV3.get().getPort("S1");
 	private static final Port rightLightPort = LocalEV3.get().getPort("S4");
 	private static final Port frontUSPort = LocalEV3.get().getPort("S3");
-	private static final Port backUSPort = LocalEV3.get().getPort("S2");
+//	private static final Port backUSPort = LocalEV3.get().getPort("S2");
 
 
 	//package-private
@@ -34,8 +34,8 @@ public class Project {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
-	static final EV3LargeRegulatedMotor clawMotor =
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
+	//static final EV3LargeRegulatedMotor clawMotor =
+		//	new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final EV3LargeRegulatedMotor upMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	public static void main (String [] args) throws OdometerExceptions, InterruptedException, ObstacleAvoidanceException {
@@ -44,9 +44,9 @@ public class Project {
 		SensorModes frontUSSensor = new EV3UltrasonicSensor(frontUSPort); // usSensor is the instance
 		SampleProvider frontUSDistance = frontUSSensor.getMode("Distance");// usDistance provides samples from
 
-		@SuppressWarnings("resource") 
-		SensorModes backUSSensor = new EV3UltrasonicSensor(backUSPort); // usSensor is the instance
-		SampleProvider backUSDistance = backUSSensor.getMode("Distance");// usDistance provides samples from
+//		@SuppressWarnings("resource") 
+//		SensorModes backUSSensor = new EV3UltrasonicSensor(backUSPort); // usSensor is the instance
+//		SampleProvider backUSDistance = backUSSensor.getMode("Distance");// usDistance provides samples from
 
 		@SuppressWarnings("resource")
 		SensorModes leftLightSensor = new EV3ColorSensor(leftLightPort);//lightSensor is the instance 
@@ -85,7 +85,7 @@ public class Project {
 		//Odometer display
 		Thread odoDisplay = new Thread(odometryDisplay);
 		odoDisplay.start();
-		//usLocal.fallingEdge();
+		usLocal.fallingEdge();
 		lightLocal.localize();
 		
 	}

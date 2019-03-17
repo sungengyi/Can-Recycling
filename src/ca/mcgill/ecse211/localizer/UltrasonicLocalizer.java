@@ -13,7 +13,7 @@ public class UltrasonicLocalizer{
 	private final double TRACK; // The width of the wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
 	private static final int ROTATE_SPEED = 120; //Speed of the motors
-	private static final int WALL_DIST =35;//Distance from the sensor to the wall
+	private static final int WALL_DIST =30;//Distance from the sensor to the wall
 	private static final int THRESHOLD = 0;//Threshold added/subtracted from the wall distance when reading the wall
 	private static final int F_CONSTANT1 = 230; //Tweaked constant for falling edge angle conversion
 	private static final int F_CONSTANT2 = 50; //Tweaked constant for falling edge angle conversion
@@ -38,8 +38,8 @@ public class UltrasonicLocalizer{
 		this.odo = odo;
 		this.usDistance = usDistance;
 
-		leftMotor.setAcceleration(100);
-		rightMotor.setAcceleration(100);
+		leftMotor.setAcceleration(5000);
+		rightMotor.setAcceleration(5000);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 	}
