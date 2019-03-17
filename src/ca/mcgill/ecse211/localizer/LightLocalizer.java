@@ -4,7 +4,7 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
-
+import ca.mcgill.ecse211.*;
 public class LightLocalizer{
 	private static Odometer odo = null;
 	private EV3LargeRegulatedMotor leftMotor;
@@ -196,6 +196,7 @@ public class LightLocalizer{
 	 * 
 	 */
 	public void localize() {
+
 		leftMotor.setAcceleration(10000);
 		rightMotor.setAcceleration(10000);
 		double left = getLightData(leftLightIntensity);
@@ -214,6 +215,7 @@ public class LightLocalizer{
 			return true;
 		}else { 
 			return false;	
+
 		}
 	}
 	public boolean onNormalField(double fieldReflection,SampleProvider lightIntensity) {
