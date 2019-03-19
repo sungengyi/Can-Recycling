@@ -12,7 +12,7 @@ public class UltrasonicLocalizer{
 	private SampleProvider usDistance;
 	private final double TRACK; // The width of the wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
-	private static final int ROTATE_SPEED = 120; //Speed of the motors
+	private static final int ROTATE_SPEED = 220; //Speed of the motors
 	private static final int WALL_DIST =30;//Distance from the sensor to the wall
 	private static final int THRESHOLD = 0;//Threshold added/subtracted from the wall distance when reading the wall
 	private static final int F_CONSTANT1 = 230; //Tweaked constant for falling edge angle conversion

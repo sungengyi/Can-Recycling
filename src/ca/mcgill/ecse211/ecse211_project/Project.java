@@ -60,7 +60,7 @@ public class Project {
 		public static double SZR_UR_y = 0;
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 13.7;//Width of wheel axis
+	public static final double TRACK = 13.8;//Width of wheel axis
 	public static final double TILE_SIZE = 30.48;
 	public static final double OFF_SET = 2.5; // this is the offset from the 2 line-detecting light sensors to the wheel
 
@@ -207,14 +207,38 @@ public class Project {
 		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
 		Navigator oa = Navigator.getNavigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 
+
+		usLocal.fallingEdge();
+		lightLocal.localize();
+		odometer.setX(0);
+		odometer.setY(0);
 		Sound.beep();
 		double angleA = oa.getDesAngle((TN_LL_x-0.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
 		oa.turnTo(angleA);
 		oa.travelTo((TN_LL_x-0.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
 		double angleB = oa.getDesAngle((TN_UR_x+0.5)*TILE_SIZE,(TN_UR_y-0.5)*TILE_SIZE);
+		//upMotor.rotate(-90);
 		oa.turnTo(angleB);
 		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
 
+		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		oa.turnTo(angleC);
+		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+
+		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+		oa.turnTo(angleD);
+		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		
 		
 
 

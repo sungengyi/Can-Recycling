@@ -1,10 +1,8 @@
 package ca.mcgill.ecse211.localizer;
 
 import ca.mcgill.ecse211.odometer.Odometer;
-import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
-import ca.mcgill.ecse211.*;
 public class LightLocalizer{
 	private static Odometer odo = null;
 	private EV3LargeRegulatedMotor leftMotor;
@@ -15,11 +13,7 @@ public class LightLocalizer{
 	private final double TRACK;
 	private static final double SENSOR_GAP = 4; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
-	private final static double CAR_LENGTH = 12.5; //Distance from center of rotation to light sensor
-	private final static double TILE_SIZE = 30.48; //Distance from center of rotation to light sensor
-
-	private static final int ROTATE_SPEED = 120; //Speed of robot
-	private static double CIRCUMFERENCE; //Circumferencce of wheel axis
+	private static final int ROTATE_SPEED = 130; //Speed of robot
 	/**
 	 * Default constructor initializes all fields of LightLocalizer.
 	 * @param lightIntensity
@@ -38,7 +32,6 @@ public class LightLocalizer{
 		LightLocalizer.odo = odo;
 		this.leftLightIntensity = leftLightIntensity;
 		this.rightLightIntensity = rightLightIntensity;
-		CIRCUMFERENCE = Math.PI * TRACK;
 		leftMotor.setAcceleration(3000);
 		rightMotor.setAcceleration(3000);
 		leftMotor.setSpeed(ROTATE_SPEED);
@@ -225,58 +218,7 @@ public class LightLocalizer{
 			return false;
 		}
 	}
-	/**
-	 * This method sets the initial position on odometer.
-	 * @param SC
-	 * @param x
-	 * @param y
-	 * @param theta
-	 */
-	public void setInitialPosition(int SC, double x, double y, double theta) {
-		switch(SC) {
-		case 0:
-			odo.setX(TILE_SIZE + x);
-			odo.setY(TILE_SIZE + y);
-			break;
-		case 1:
-			odo.setX(7*TILE_SIZE + x);
-			odo.setY(TILE_SIZE + y);
-			break;
-		case 2:
 
-			odo.setX(7*TILE_SIZE + x);
-			odo.setY(7*TILE_SIZE + y);
-			break;
-		case 3:
-			odo.setX(TILE_SIZE + x);
-			odo.setY(7*TILE_SIZE + y);
-			break;
-		}
-		odo.setTheta(theta);
-		turnTo(0);
-		odo.setTheta(0);
-	}
 
-	/**
-	 * Calculate the x position.
-	 * @param line2
-	 * @param line4
-	 * @return
-	 */
-	public double getFinalX(int line2, int line4) {
-		double theta = 2 * Math.PI * (((line4 - line2)/360.0)*2 * Math.PI * WHEEL_RAD )/CIRCUMFERENCE;
-		double result = -CAR_LENGTH * Math.cos(theta/2);
-		return result;
-	}
-	/**
-	 * Calculates the y position.
-	 * @param line1
-	 * @param line3
-	 * @return
-	 */
-	public double getFinalY(int line1, int line3) {
-		double theta = 2 * Math.PI* (((line3 - line1)/360.0) *2* Math.PI * WHEEL_RAD )/CIRCUMFERENCE;
-		double result = -CAR_LENGTH * Math.cos(theta/2);
-		return result;
-	}
+
 }
