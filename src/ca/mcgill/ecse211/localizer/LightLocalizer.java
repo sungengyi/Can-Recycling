@@ -126,12 +126,12 @@ public class LightLocalizer{
 			leftMotor.forward();
 			rightMotor.forward();
 		}while(onNormalField(left, leftLightIntensity)&&onNormalField(right, rightLightIntensity));
-		System.out.println("d1");
+		//System.out.println("d1");
 
 	}
 	public void moveForward(double left, double right) {
 
-		System.out.println("b1");
+		//System.out.println("b1");
 		leftMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),true);
 		rightMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),false);
 
@@ -151,7 +151,7 @@ public class LightLocalizer{
 				rightIsOnLine = true;
 				leftMotor.stop(true);
 				rightMotor.stop();
-				System.out.println("break");
+				//system.out.println("break");
 				break;
 			}else {
 				if(!leftIsOnLine) {
@@ -161,10 +161,10 @@ public class LightLocalizer{
 					rightMotor.forward();
 				}
 				if(lineDetected(left, leftLightIntensity) && !leftIsOnLine) {
-					System.out.println("case1");
+					//System.out.println("case1");
 					leftMotor.stop(true);
 					rightMotor.stop();
-					System.out.println("c1");
+					//System.out.println("c1");
 					leftIsOnLine = true;
 					rightMotor.forward();
 					if(lineDetected(left, leftLightIntensity) && rightIsOnLine) {
@@ -174,11 +174,11 @@ public class LightLocalizer{
 					}
 				}
 				if(lineDetected(right, rightLightIntensity) && !rightIsOnLine) {
-					System.out.println("case2");
+					//System.out.println("case2");
 
 					leftMotor.stop(true);
 					rightMotor.stop();
-					System.out.println("c2");
+					//System.out.println("c2");
 					rightIsOnLine = true;
 					leftMotor.forward();
 					if(lineDetected(right, rightLightIntensity) && leftIsOnLine) {
