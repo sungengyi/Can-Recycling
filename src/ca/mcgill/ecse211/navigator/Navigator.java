@@ -88,7 +88,7 @@ public class Navigator implements Runnable {
 	 * @param x
 	 * @param y
 	 */
-	public static void travelTo(double x, double y) {
+	public void travelTo(double x, double y) {
 		// is travelTo is called, set isNavigating true
 		double position[] = odo.getXYT();
 		double xCur = position[0], yCur = position[1];
@@ -103,7 +103,7 @@ public class Navigator implements Runnable {
 		rightMotor.setAcceleration(500);
 
 		leftMotor.rotate(convertDistance(WHEEL_RAD, distance), true);
-		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), true);
+		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), false);
 
 //		while (leftMotor.isMoving() || rightMotor.isMoving()) {
 //

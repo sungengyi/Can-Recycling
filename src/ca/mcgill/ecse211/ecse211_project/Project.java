@@ -200,44 +200,25 @@ public class Project {
 
 		Thread odoDisplay = new Thread(odometryDisplay);
 		odoDisplay.start();
-		usLocal.fallingEdge();
-		lightLocal.localize();
+		//usLocal.fallingEdge();
+		//lightLocal.localize();
 		odometer.setX(0);
 		odometer.setY(0);
-		double [][] waypoints = SC0(TN_LL_x-1,TN_LL_y+0.5,TN_UR_x-1,TN_UR_y+0.5);
+		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
 		Navigator oa = Navigator.getNavigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
-		oa.travelTo((TN_LL_x-0.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-		double angle = oa.getDesAngle(TILE_SIZE,TILE_SIZE);
-		oa.turnTo(angle);
-		oa.travelTo(TILE_SIZE, TILE_SIZE);
 
 		Sound.beep();
 		double angleA = oa.getDesAngle((TN_LL_x-0.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
 		oa.turnTo(angleA);
 		oa.travelTo((TN_LL_x-0.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-
+		double angleB = oa.getDesAngle((TN_UR_x+0.5)*TILE_SIZE,(TN_UR_y-0.5)*TILE_SIZE);
+		oa.turnTo(angleB);
+		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
 
 		
-		for(int i = 1; i < waypoints.length; i++) {
-			oa.updateWaypoints(waypoints[i][0], waypoints[i][1]);
-			while(!oa.checkifDone(odometer.getXYT())) {
-				Thread.sleep(20);
-
-			}
-
-//			
-		}
 
 
-		double angleB = oa.getDesAngle((TN_UR_x-0.5)*TILE_SIZE,(TN_UR_y+0.5)*TILE_SIZE);
 
-		oa.turnTo(angleB);
-
-		oa.travelTo((TN_UR_x-0.5)*TILE_SIZE, (TN_UR_y+0.5)*TILE_SIZE);
-
-		Sound.beep();
-		oa.travelTo((TN_LL_x-0.5), (TN_LL_y+0.5));
-		Sound.beep();
 
 		
 	}
