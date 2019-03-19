@@ -1,14 +1,9 @@
 package ca.mcgill.ecse211.navigator;
 
-import java.util.ArrayList;
 import ca.mcgill.ecse211.odometer.Odometer;
 
-import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.sensor.SensorModes;
-import lejos.robotics.SampleProvider;
+
 
 public class Navigator implements Runnable {
 	private int counter = 0;
@@ -23,13 +18,10 @@ public class Navigator implements Runnable {
 	private final double TRACK;
 	private static double WHEEL_RAD;
 	private double thetaDesired;//
-	private boolean done; // deciding if the robot reaches waypoint
 	private int deltax, deltay;
 
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 120;
-	private static final double TILE_SIZE = 30.48;
-	private static final int ERROR = 5;
 	private static final long NAVIGATION_PERIOD = 5000;
 	private static double[][] arr;
 
@@ -52,7 +44,6 @@ public class Navigator implements Runnable {
 		this.WHEEL_RAD = WHEEL_RAD;
 		this.arr = waypoints;
 		this.odo = odo;
-		this.done = false;
 
 	}
 
@@ -94,8 +85,8 @@ public class Navigator implements Runnable {
 	 * This method makes robot to travel straight in the direction of its heading.
 	 * Inputs should be x or y coordinates.
 	 * 
-	 * @param tileSize
-	 * @param tileSize2
+	 * @param x
+	 * @param y
 	 */
 	public static void travelTo(double x, double y) {
 		// is travelTo is called, set isNavigating true
@@ -206,8 +197,6 @@ public class Navigator implements Runnable {
 		yDesired = y;
 		thetaDesired = getDesAngle();
 
-		this.done = false;
-
 		// is travelTo is called, set isNavigating true
 
 	}
@@ -253,7 +242,7 @@ public class Navigator implements Runnable {
 		deltay = Math.abs((int) (yDesired - distance[1]));
 
 		// if the current odo position is within 2 cm of the destination point
-		return this.done = (deltax < 2 && deltay < 2);
+		return (deltax < 2 && deltay < 2);
 	}
 	/**
 	 * Run method

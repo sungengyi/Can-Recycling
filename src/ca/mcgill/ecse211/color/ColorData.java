@@ -10,7 +10,6 @@ public class ColorData {
 	private float [] colorData;
 	private float red,green,blue;
 	private int colorNumber = 200;
-	private boolean found;
 	private static final int BLUE = 1;
 	private static final int GREEN = 2;
 	private static final int YELLOW = 3;
