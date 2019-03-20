@@ -120,6 +120,8 @@ public class Navigator implements Runnable {
 //		}
 
 	}
+	
+	
 
 	/**
 	 * This method changes the robot's heading. Input theta is positive if it's

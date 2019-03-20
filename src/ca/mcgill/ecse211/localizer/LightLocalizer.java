@@ -202,6 +202,7 @@ public class LightLocalizer{
 		correction(left,right);
 		moveForward(left,right);
 		turn(-90);
+		odo.setXYT(30.48, 30.48, 0);
 	}
 	public boolean lineDetected(double fieldReflection,SampleProvider lightIntensity) {
 		if((getLightData(lightIntensity) - fieldReflection) <= - 0.1) {
