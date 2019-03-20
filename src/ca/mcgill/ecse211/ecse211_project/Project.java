@@ -221,6 +221,24 @@ public class Project {
 		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
 		//Thread.sleep(1000);
 		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
+		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		oa.turnTo(angleC);
+		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+		oa.turnTo(angleD);
+		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
 		//
 		/*
 		 * lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
