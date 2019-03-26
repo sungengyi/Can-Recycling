@@ -1,13 +1,11 @@
 package ca.mcgill.ecse211.ecse211_project;
 
 import java.util.Map;
-
 import ca.mcgill.ecse211.WiFiClient.wifiTest.wifiTest;
 import ca.mcgill.ecse211.color.Display;
 import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.localizer.UltrasonicLocalizer;
 import ca.mcgill.ecse211.navigator.Navigator;
-import ca.mcgill.ecse211.navigator.NavigatorException;
 import ca.mcgill.ecse211.navigator.ObstacleAvoidanceException;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
@@ -80,7 +78,7 @@ public class Project {
 		//	new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final EV3LargeRegulatedMotor upMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
-	public static void main (String [] args) throws OdometerExceptions, InterruptedException, ObstacleAvoidanceException, NavigatorException {
+	public static void main (String [] args) throws OdometerExceptions, InterruptedException, ObstacleAvoidanceException{
 		
 		Map data = wifiTest.WIFI();
 	
@@ -202,43 +200,45 @@ public class Project {
 		
 		usLocal.fallingEdge();
 		lightLocal.localize();
-		Thread.sleep(3000);
-		
-		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
-		
-		
-		
-		Thread.sleep(5000);
-
-		Navigator oa = Navigator.getNavigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
-		
-		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
-		oa.turnTo(angleA);
-		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-		
-		oa.turnTo(90);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		//Thread.sleep(1000);
-		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		oa.turnTo(angleC);
-		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
+//		Thread.sleep(3000);
+//		
+//		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
+//		
+//		
+//		
+//		Thread.sleep(5000);
+//
+//		Navigator oa = new Navigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
+//		Sound.beep();
+//		
+//		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
+//		oa.turnTo(angleA);
+//		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
+//		
+//		oa.turnTo(90);
 //		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-		oa.turnTo(angleD);
-		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
+//		//Thread.sleep(1000);
+//		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
+//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+//		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+//		oa.turnTo(angleC);
+//		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
+//		
+////		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+//		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+//		oa.turnTo(angleD);
+//		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
+//		Sound.beep();
 		//
 		/*
 		 * lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));

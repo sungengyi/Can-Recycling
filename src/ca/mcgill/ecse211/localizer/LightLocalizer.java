@@ -13,7 +13,7 @@ public class LightLocalizer{
 	private final double TRACK;
 	private static final double SENSOR_GAP = 4; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
-	private static final int ROTATE_SPEED = 130; //Speed of robot
+	private static final int ROTATE_SPEED = 100; //Speed of robot
 	/**
 	 * Default constructor initializes all fields of LightLocalizer.
 	 * @param lightIntensity
@@ -114,17 +114,14 @@ public class LightLocalizer{
 		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), false);
 
 	}
-	public void detect(double left,double right) {
-		do {
-			leftMotor.forward();
-			rightMotor.forward();
-		}while(onNormalField(left, leftLightIntensity)&&onNormalField(right, rightLightIntensity));
-		//System.out.println("d1");
-
-	}
+	
 	public void moveForward(double left, double right) {
 
 		//System.out.println("b1");
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
 		leftMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),true);
 		rightMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),false);
 
@@ -194,11 +191,9 @@ public class LightLocalizer{
 		rightMotor.setAcceleration(10000);
 		double left = getLightData(leftLightIntensity);
 		double right = getLightData(rightLightIntensity);
-	//	detect(left,right);
-		correction(left,right);
-		moveForward(left,right);
-		turn(90);
-	//	detect(left,right);
+	correction(left,right);
+	moveForward(left,right);
+	turn(90);
 		correction(left,right);
 		moveForward(left,right);
 		turn(-90);

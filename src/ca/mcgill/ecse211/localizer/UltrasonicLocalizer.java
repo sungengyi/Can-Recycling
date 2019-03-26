@@ -1,5 +1,4 @@
 package ca.mcgill.ecse211.localizer;
-
 import ca.mcgill.ecse211.odometer.Odometer;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -12,8 +11,8 @@ public class UltrasonicLocalizer{
 	private SampleProvider usDistance;
 	private final double TRACK; // The width of the wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
-	private static final int ROTATE_SPEED = 200; //Speed of the motors
-	private static final int WALL_DIST =30;//Distance from the sensor to the wall
+	private static final int ROTATE_SPEED = 250; //Speed of the motors
+	private static final int WALL_DIST = 37;//Distance from the sensor to the wall
 	private static final int THRESHOLD = 0;//Threshold added/subtracted from the wall distance when reading the wall
 	private static final int F_CONSTANT1 = 230; //Tweaked constant for falling edge angle conversion
 	private static final int F_CONSTANT2 = 50; //Tweaked constant for falling edge angle conversion
@@ -55,6 +54,7 @@ public class UltrasonicLocalizer{
 		//the program is going to accidently go through all the loops at once.
 		if(getUSData() > WALL_DIST || getUSData() < WALL_DIST + THRESHOLD) {
 			accidentHandler();
+		
 		}
 		//Falling edge method usually starts facing away from the wall.
 		//If the robot starts facing the wall, it turns until not seeing the wall.
@@ -62,26 +62,25 @@ public class UltrasonicLocalizer{
 			turnRight();
 		}
 		//Indication of the process
-		Sound.beep();
+
 		//The robot turns left to make a falling angle with the side wall.
 		while(getUSData() > WALL_DIST) {
 			turnLeft();
 		}
 		//Record the first falling angle.
 		alpha = odo.getT();
-		Sound.beep();
 		//The robot turns right to make a falling angle with the back wall.
 		while(getUSData() < WALL_DIST + THRESHOLD) {
 			turnRight();
+
 		}
-		Sound.beep();
 		//Continue to turn right.
 		while(getUSData() >= WALL_DIST ) {
 			turnRight();
+
 		}
 		//Record the second falling edge angle.
 		beta = odo.getT();
-		Sound.beep();
 		//Stop the motion.
 		rightMotor.stop(true);
 		leftMotor.stop(false);
@@ -111,14 +110,12 @@ public class UltrasonicLocalizer{
 			turnLeft();
 		}
 		//Indication of the process
-		Sound.beep();
 		//The robot turns right to make a rising angle with the side wall.
 		while(getUSData() < WALL_DIST) {
 			turnRight();
 		}
 		//Record the first rising edge angle.
 		alpha = odo.getT();
-		Sound.beep();
 		//The robot turns left to make a rising angle with the side wall.
 		while(getUSData() > WALL_DIST - THRESHOLD) 
 		{
@@ -128,7 +125,6 @@ public class UltrasonicLocalizer{
 		while(getUSData() <= WALL_DIST) {
 			turnLeft();
 		}
-		Sound.beep();
 		beta = odo.getT();
 		rightMotor.stop(true);
 		leftMotor.stop(false);
@@ -178,8 +174,8 @@ public class UltrasonicLocalizer{
 	 * 
 	 */
 	public void accidentHandler() {
-		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 30), true);
-		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 30), true);
+		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 90), true);
+		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 90), false);
 	}
 	/**
 	 * This method turns the robot heading to the specified angle by taking

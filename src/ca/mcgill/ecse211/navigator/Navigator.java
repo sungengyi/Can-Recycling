@@ -47,47 +47,6 @@ public class Navigator implements Runnable {
 
 	}
 
-	/**
-	 * This method is meant to ensure only one instance of the navigator is used
-	 * throughout the code.
-	 * 
-	 * @param leftMotor
-	 * @param rightMotor
-	 * @return new or existing Odometer Object
-	 * @throws OdometerExceptions
-	 */
-	public synchronized static Navigator getNavigator(double[][] waypoints, Odometer odo, EV3LargeRegulatedMotor leftMotor,
-			EV3LargeRegulatedMotor rightMotor, final double TRACK, final double WHEEL_RAD) throws NavigatorException {
-		if (navig != null) { // Return existing object
-			return navig;
-		} else { // create object and return it
-			navig = new Navigator(waypoints, odo, leftMotor, rightMotor, TRACK, WHEEL_RAD);
-			return navig;
-		}
-	}
-
-	/**
-	 * This class is meant to return the existing Odometer Object. It is meant to be
-	 * used only if an odometer object has been created
-	 * 
-	 * @return error if no previous odometer exists
-	 */
-	public synchronized static Navigator getNavigator() throws NavigatorException {
-
-		if (navig == null) {
-			throw new NavigatorException("No previous Odometer exits.");
-
-		}
-		return navig;
-	}
-
-	/**
-	 * This method makes robot to travel straight in the direction of its heading.
-	 * Inputs should be x or y coordinates.
-	 * 
-	 * @param x
-	 * @param y
-	 */
 	public void travelTo(double x, double y) {
 		// is travelTo is called, set isNavigating true
 		double position[] = odo.getXYT();
