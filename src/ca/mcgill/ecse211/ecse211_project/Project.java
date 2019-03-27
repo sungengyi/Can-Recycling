@@ -187,48 +187,40 @@ public class Project {
 		//Instances of localizers
 		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightIntensity, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		UltrasonicLocalizer usLocal = new UltrasonicLocalizer (frontUSDistance, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
-		//ColorData color = new ColorData(rightLightIntensity);
-		//Display onto the screen
-		Display odometryDisplay = new Display(lcd); // No need to change
+		
 
-		lcd.clear();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
-		Thread odoDisplay = new Thread(odometryDisplay);
-		odoDisplay.start();
-		
 		usLocal.fallingEdge();
 		lightLocal.localize();
 		Sound.beep();
-//		Thread.sleep(3000);
-//		
-//		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
-//		
-//		
-//		
-//		Thread.sleep(5000);
-//
-//		Navigator oa = new Navigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
-//		Sound.beep();
-//		
-//		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
-//		oa.turnTo(angleA);
-//		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-//		
-//		oa.turnTo(90);
-//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-//		//Thread.sleep(1000);
-//		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-//		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		oa.turnTo(angleC);
-//		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
+		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
+		
+		
+		
+		Thread.sleep(5000);
+
+		Navigator oa = new Navigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
+		Sound.beep();
+		
+		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
+		oa.turnTo(angleA);
+		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
+		
+		oa.turnTo(90);
+		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		//Thread.sleep(1000);
+		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
+		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		oa.turnTo(angleC);
+		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
 //		
 ////		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
 //		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);

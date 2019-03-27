@@ -118,14 +118,12 @@ public class LightLocalizer{
 	public void moveForward(double left, double right) {
 
 		//System.out.println("b1");
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-		}
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//		}
 		leftMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),true);
 		rightMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),false);
-
-
 	}
 	public void turn(double angle) {
 		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, angle), true);
@@ -141,15 +139,8 @@ public class LightLocalizer{
 				rightIsOnLine = true;
 				leftMotor.stop(true);
 				rightMotor.stop();
-				//system.out.println("break");
 				break;
 			}else {
-				if(!leftIsOnLine) {
-					leftMotor.forward();
-				}
-				if(!rightIsOnLine) {
-					rightMotor.forward();
-				}
 				if(lineDetected(left, leftLightIntensity) && !leftIsOnLine) {
 					//System.out.println("case1");
 					leftMotor.stop(true);
@@ -157,7 +148,7 @@ public class LightLocalizer{
 					//System.out.println("c1");
 					leftIsOnLine = true;
 					rightMotor.forward();
-					if(lineDetected(left, leftLightIntensity) && rightIsOnLine) {
+					if(leftIsOnLine && rightIsOnLine) {
 						leftMotor.stop(true);
 						rightMotor.stop();
 						break;
@@ -171,11 +162,17 @@ public class LightLocalizer{
 					//System.out.println("c2");
 					rightIsOnLine = true;
 					leftMotor.forward();
-					if(lineDetected(right, rightLightIntensity) && leftIsOnLine) {
+					if(rightIsOnLine && leftIsOnLine) {
 						leftMotor.stop(true);
 						rightMotor.stop();
 						break;
 					}
+				}
+				if(!leftIsOnLine) {
+					leftMotor.forward();
+				}
+				if(!rightIsOnLine) {
+					rightMotor.forward();
 				}
 			}
 		}
@@ -191,16 +188,16 @@ public class LightLocalizer{
 		rightMotor.setAcceleration(10000);
 		double left = getLightData(leftLightIntensity);
 		double right = getLightData(rightLightIntensity);
-	correction(left,right);
-	moveForward(left,right);
-	turn(90);
+		correction(left,right);
+		moveForward(left,right);
+		turn(90);
 		correction(left,right);
 		moveForward(left,right);
 		turn(-90);
 		odo.setXYT(30.48, 30.48, 0);
 	}
 	public boolean lineDetected(double fieldReflection,SampleProvider lightIntensity) {
-		if((getLightData(lightIntensity) - fieldReflection) <= - 0.1) {
+		if((getLightData(lightIntensity) - fieldReflection) <= - 0.15) {
 			return true;
 		}else { 
 			return false;	
