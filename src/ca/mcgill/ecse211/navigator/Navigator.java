@@ -130,7 +130,10 @@ public class Navigator {
 		double LOC_y = 0;
 		double CEN_x = 0;
 		double CEN_y = 0;
+		double DEN_x = 0;
+		double DEN_y = 0;		
 		boolean isTunnelVertical;
+		
 		if ((corner == 0 || corner == 3) && TN_UR_x > UR_x)
 			isTunnelVertical = false;
 		else if ((corner == 1 || corner == 2) && TN_LL_x < LL_x)
@@ -139,6 +142,9 @@ public class Navigator {
 			isTunnelVertical = true;
 //case (0,0)
 		if(corner == 0) {
+			
+			odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
+
 			if(isTunnelVertical) {
 				DES_x = TN_LL_x-1.5;
 				DES_y = TN_LL_y+0.5;
@@ -147,6 +153,8 @@ public class Navigator {
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x+0.5);
 				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 			}
 			else {
 				DES_x = TN_LL_x +0.5;
@@ -156,9 +164,12 @@ public class Navigator {
 				LOC_y = DES_y + 0.5;
 				CEN_x = (LOC_x-0.5);
 				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x-0.5;
+				DEN_y = TN_UR_y+0.5;
 			}
 		}
 		else if (corner == 1) {
+			
 			Sound.beep();
 			Sound.beep();
 			odometer.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
@@ -170,6 +181,8 @@ public class Navigator {
 				LOC_y = DES_y + 0.5;
 				CEN_x = (LOC_x-0.5);
 				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x-0.5;
+				DEN_y = TN_UR_y+0.5;
 			}
 			else {
 
@@ -180,9 +193,13 @@ public class Navigator {
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x-0.5);
 				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
+				
 			}
 		}
 		else if(corner == 2) {
+		
 			odometer.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
@@ -192,6 +209,8 @@ public class Navigator {
 				LOC_y = DES_y + 0.5;
 				CEN_x = (LOC_x-0.5);
 				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
 			}
 			else {
 				DES_x = TN_UR_x - 0.5;
@@ -201,6 +220,8 @@ public class Navigator {
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x+0.5);
 				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x+0.5;
+				DEN_y = TN_LL_y-0.5;
 			}
 			
 		}
@@ -214,6 +235,8 @@ public class Navigator {
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x+0.5);
 				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x + 0.5;
+				DEN_y = TN_LL_y - 0.5;
 			}
 			else {
 				DES_x = TN_LL_x - 1.5;
@@ -223,6 +246,8 @@ public class Navigator {
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x+0.5);
 				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 			}
 		}
 		else {
@@ -232,22 +257,43 @@ public class Navigator {
 		//Sound.beep();
 		System.out.print("vertical: " + isTunnelVertical);
 
-		System.out.print(DES_x + " destination x");
-		System.out.print(DES_y + " destination y");
+		System.out.print(DES_x + " des x");
+		System.out.print(DES_y + " des y");
 		System.out.println(DES_angle + " angle");
+		System.out.println("loc x" + LOC_x);
+		System.out.println("loc y"  + LOC_y);
+		System.out.println("CEN x " + CEN_x);
+		System.out.println("cen y" + CEN_y);
+		System.out.println("den x " + DEN_x);
+		System.out.println("den y " + DEN_y);
+
 
 		double angleA = getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE);
 		turnTo(angleA);
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
-		
+		System.out.println("DES_x"+odometer.getX()/TILE_SIZE);
+		System.out.println("DES_y"+odometer.getY()/TILE_SIZE);	
 		turnTo(DES_angle);
 		lightLocal.localize();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
 		odometer.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
+		System.out.println("LOC_x"+odometer.getX()/TILE_SIZE);
+		System.out.println("LOC_y"+odometer.getY()/TILE_SIZE);
+
 		double angle_turn = getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE);
 		turnTo(angle_turn);
+		travelTo(CEN_x*TILE_SIZE, CEN_y*TILE_SIZE);
+		System.out.println("CEN_x"+odometer.getX()/TILE_SIZE);
+		System.out.println("CEN_y"+odometer.getY()/TILE_SIZE);
+		double angle_turn_tunnel = getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE);
+		turnTo(angle_turn_tunnel);
+		travelTo(DEN_x*TILE_SIZE, DEN_x*TILE_SIZE);
+		System.out.println("DEN_x"+odometer.getX()/TILE_SIZE);
+		System.out.println("DEN_y"+odometer.getY()/TILE_SIZE);
 		Sound.beep();
-		//Sound.beep();
-		//travelTo(0.5*TILE_SIZE, 0.5*TILE_SIZE);
 		Sound.beep();
 	}
 

@@ -32,7 +32,7 @@ import ca.mcgill.ecse211.WiFiClient.WifiConnection;
 public class wifiTest {
 
   // ** Set these as appropriate for your team and current situation **
-  private static final String SERVER_IP = "192.168.2.9";
+  private static final String SERVER_IP = "192.168.2.23";
   private static final int TEAM_NUMBER = 9;
 
   // Enable/disable printing of debug info from the WiFi class

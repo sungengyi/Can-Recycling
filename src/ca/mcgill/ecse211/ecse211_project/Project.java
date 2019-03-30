@@ -166,21 +166,11 @@ public class Project {
 
 		usLocal.fallingEdge();
 		lightLocal.localize();
-		odometer.setXYT(30.48, 30.48, 0);
 		Sound.beep();		
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		oa.TravelToTunnel(lightLocal, odometer);
-		//oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-		//lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		//double angleC = oa.getDesAngle((SZ_LL_x)*TILE_SIZE,(SZ_LL_y)*TILE_SIZE);
-		//oa.turnTo(angleC);
-		//oa.travelTo((SZ_LL_x)*TILE_SIZE,(SZ_LL_y)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
+
 		
 	}
 
