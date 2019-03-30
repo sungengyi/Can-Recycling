@@ -1,11 +1,13 @@
 package ca.mcgill.ecse211.navigator;
 
+import ca.mcgill.ecse211.ecse211_project.Project;
+import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.odometer.Odometer;
-
+import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 
-public class Navigator implements Runnable {
+public class Navigator {
 	private int counter = 0;
 	private static Navigator navig = null;
 	private static Odometer odo = null;
@@ -19,12 +21,28 @@ public class Navigator implements Runnable {
 	private static double WHEEL_RAD;
 	private double thetaDesired;//
 	private int deltax, deltay;
-
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 120;
 	private static final long NAVIGATION_PERIOD = 5000;
 	private static double[][] arr;
-
+	public static final double TILE_SIZE = Project.TILE_SIZE;
+	private static final double Island_LL_x = Project.Island_LL_x; // x coordinate of the lower left corner of the
+	private static final double Island_LL_y = Project.Island_LL_y; // y coordinate of the lower left corner of the
+	private static final double Island_UR_x = Project.Island_UR_x; // x coordinate of the upper right corner of the
+	private static final double Island_UR_y = Project.Island_UR_y; // y coordinate of the upper right corner of the
+	private static final int corner = Project.corner; // the starting corner
+	private static final double LL_x = Project.LL_x; // x coordinate of the lower left corner of the home section
+	private static final double LL_y = Project.LL_y; // y coordinate of the lower left corner of the home section
+	private static final double UR_x = Project.UR_x; // x coordinate of the upper right corner of the home section
+	private static final double UR_y = Project.UR_y; // y coordinate of the upper right corner of the home section
+	private static final double TN_LL_x = Project.TN_LL_x; // x coordinate of the lower left of the tunnel
+	private static final double TN_LL_y = Project.TN_LL_y; // y coordinate of the lower left of the tunnel
+	private static final double TN_UR_x = Project.TN_UR_x; // x coordinate of the upper right of the tunnel
+	private static final double TN_UR_y = Project.TN_UR_y; // y coordinate of the upper right of the tunnel
+	private static final double SZ_LL_x = Project.SZ_LL_x; // x coordinate of the ring tree
+	private static final double SZ_LL_y = Project.SZ_LL_y; // y coordinate of the ring tree
+	private static final double SZ_UR_x = Project.SZ_UR_x; // x coordinate of the ring tree
+	private static final double SZ_UR_y = Project.SZ_UR_y; // y coordinate of the ring tree
 	/**
 	 * The default constructor. It initiates all the parameters.
 	 * 
@@ -36,13 +54,12 @@ public class Navigator implements Runnable {
 	 * @param TRACK
 	 * @param WHEEL_RAD
 	 */
-	public Navigator(double[][] waypoints, Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
+	public Navigator( Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			final double TRACK, final double WHEEL_RAD) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.TRACK = TRACK;
 		this.WHEEL_RAD = WHEEL_RAD;
-		this.arr = waypoints;
 		this.odo = odo;
 
 	}
@@ -64,19 +81,6 @@ public class Navigator implements Runnable {
 		leftMotor.rotate(convertDistance(WHEEL_RAD, distance), true);
 		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), false);
 
-//		while (leftMotor.isMoving() || rightMotor.isMoving()) {
-//
-//			// take reading
-//			int size = usDistance.sampleSize();
-//			float[] usdata = new float[size];
-//			usDistance.fetchSample(usdata, 0);
-//			distance = usdata[0] * 100.0;
-//
-//			// obstacle avoidance
-////			if (distance < 10) {
-////				selector(odo.getXYT());
-////			}
-//		}
 
 	}
 	
@@ -117,6 +121,134 @@ public class Navigator implements Runnable {
 		
 		isNavigating = false;
 
+	}
+	public void TravelToTunnel(LightLocalizer lightLocal, Odometer odometer) {
+		double DES_x = 0;
+		double DES_y = 0;
+		double DES_angle = 0;
+		double LOC_x = 0;
+		double LOC_y = 0;
+		double CEN_x = 0;
+		double CEN_y = 0;
+		boolean isTunnelVertical;
+		if ((corner == 0 || corner == 3) && TN_UR_x > UR_x)
+			isTunnelVertical = false;
+		else if ((corner == 1 || corner == 2) && TN_LL_x < LL_x)
+			isTunnelVertical = false;
+		else
+			isTunnelVertical = true;
+//case (0,0)
+		if(corner == 0) {
+			if(isTunnelVertical) {
+				DES_x = TN_LL_x-1.5;
+				DES_y = TN_LL_y+0.5;
+				DES_angle = 90;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y+0.5);
+			}
+			else {
+				DES_x = TN_LL_x +0.5;
+				DES_y = TN_LL_y -1.5;
+				DES_angle = 0;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
+			}
+		}
+		else if (corner == 1) {
+			Sound.beep();
+			Sound.beep();
+			odometer.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
+			if(isTunnelVertical) {
+				DES_x = TN_UR_x + 1.5;
+				DES_y = TN_UR_y - 0.5;
+				DES_angle = 270;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
+			}
+			else {
+
+				DES_x = TN_LL_x + 0.5;
+				DES_y = TN_LL_y - 1.5;
+				DES_angle = 0;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y-0.5);
+			}
+		}
+		else if(corner == 2) {
+			odometer.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
+			if(isTunnelVertical) {
+				DES_x = TN_UR_x + 1.5;
+				DES_y = TN_UR_y - 0.5;
+				DES_angle = 270;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y-0.5);
+			}
+			else {
+				DES_x = TN_UR_x - 0.5;
+				DES_y = TN_UR_y + 1.5;
+				DES_angle = 180;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
+			}
+			
+		}
+		else if(corner == 3) {
+			odometer.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
+			if(isTunnelVertical) {
+				DES_x = TN_LL_x + 0.5;
+				DES_y = TN_LL_y - 1.5;
+				DES_angle = 180;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
+			}
+			else {
+				DES_x = TN_LL_x - 1.5;
+				DES_y = TN_LL_y + 0.5;
+				DES_angle = 90;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y+0.5);
+			}
+		}
+		else {
+			Sound.buzz();
+		}
+
+		//Sound.beep();
+		System.out.print("vertical: " + isTunnelVertical);
+
+		System.out.print(DES_x + " destination x");
+		System.out.print(DES_y + " destination y");
+		System.out.println(DES_angle + " angle");
+
+		double angleA = getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE);
+		turnTo(angleA);
+		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
+		
+		turnTo(DES_angle);
+		lightLocal.localize();
+		odometer.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
+		double angle_turn = getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE);
+		turnTo(angle_turn);
+		Sound.beep();
+		//Sound.beep();
+		//travelTo(0.5*TILE_SIZE, 0.5*TILE_SIZE);
+		Sound.beep();
 	}
 
 	/**
@@ -205,66 +337,5 @@ public class Navigator implements Runnable {
 		// if the current odo position is within 2 cm of the destination point
 		return (deltax < 2 && deltay < 2);
 	}
-	/**
-	 * Run method
-	 */
-	@Override
-	public void run() {
-		long updateStart, updateEnd;
-		updateStart = System.currentTimeMillis();
-		// 5 waypoints
 
-		while (counter < arr.length - 1) {
-
-			// initial position in waypoint unit(1 unit = 1 TILE_SIZE)
-			int xInitial = (int) arr[counter][0]; //initial position is set to waypoint in array at counter position
-			int yInitial = (int) arr[counter][1];
-			// destination waypoint
-			int xDesired = (int) arr[counter + 1][0]; //desired position is set to next waypoint
-			int yDesired = (int) arr[counter + 1][1];
-			counter++;
-
-			// change in x and y in unit of waypoint
-			int X = xDesired - xInitial;
-			int Y = yDesired - yInitial;
-			// thetaDEsired: angle should achieve
-			double thetaDesired = 0;
-
-			/**
-			 * Calculation logic: thetaChange in the first or third quadrant is positive, in
-			 * the second or forth is negative.
-			 * 
-			 * thetaDesired is 0 if xChange = 0 and yChange < 0 thetaDesired is pi if
-			 * xChange = 0 and yChange > 0 thetaDesired is 3/2 * pi if yChange = 0 and
-			 * xChange < 0 thetaDesired is 1/2 * pi if yChange = 0 and xChange > 0
-			 */
-			if (X != 0 && Y != 0) {
-				// Converting angles
-				// Java math class chooses minimal angle automatically
-				thetaDesired = Math.atan2(X, Y);
-			} else {
-				if (X == 0) { // move vertically
-					thetaDesired = (Y < 0) ? Math.PI : 0;
-				} else if (Y == 0) { // move horizontally
-					thetaDesired = (X < 0) ? 3 * Math.PI / 2 : Math.PI / 2;
-				} else {
-
-				}
-			}
-			
-			navig.turnTo(Math.toDegrees(thetaDesired));
-			navig.travelTo(xDesired, yDesired);
-
-			// Wait for codes to be executed
-			// Period could be adjusted
-			updateEnd = System.currentTimeMillis();
-			if (updateEnd - updateStart < NAVIGATION_PERIOD) {
-				try {
-					Thread.sleep(NAVIGATION_PERIOD - (updateEnd - updateStart));
-				} catch (InterruptedException e) {
-					// there is nothing to be done
-				}
-			}
-		}
-	}
 }

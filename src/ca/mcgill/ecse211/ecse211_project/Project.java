@@ -46,16 +46,14 @@ public class Project {
 		public static double TN_LL_y = 3; // y coordinate of the lower left of the tunnel
 		public static double TN_UR_x = 3; // x coordinate of the upper right of the tunnel
 		public static double TN_UR_y = 5; // y coordinate of the upper right of the tunnel
-		public static double T_x = 5; // x coordinate of the can tree
-		public static double T_y = 7; // y coordinate of the can tree
 		public static double IS_LL_X = 0;
 		public static double IS_LL_Y = 0;
 		public static double IS_UR_X = 0;
 		public static double IS_UR_Y = 0;
-		public static double SZR_LL_x = 0; 
-		public static double SZR_LL_y = 0; 
-		public static double SZR_UR_x = 0; 
-		public static double SZR_UR_y = 0;
+		public static double SZ_LL_x = 0; 
+		public static double SZ_LL_y = 0; 
+		public static double SZ_UR_x = 0; 
+		public static double SZ_UR_y = 0;
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
 	public static final double TRACK = 13.6;//Width of wheel axis
@@ -84,16 +82,53 @@ public class Project {
 	
 
 		int redTeam = ((Long) data.get("RedTeam")).intValue();
-		corner = ((Long) data.get("RedCorner")).intValue(); // the starting corner
 		int greenTeam = ((Long) data.get("GreenTeam")).intValue();
-		LL_x = ((Long) data.get("Red_LL_x")).intValue(); // x coordinate of the lower left corner of the home
-		// section
-		LL_y = ((Long) data.get("Red_LL_y")).intValue(); // y coordinate of the lower left corner of the home
-		// section
-		UR_x = ((Long) data.get("Red_UR_x")).intValue(); // x coordinate of the upper right corner of the home
-		// section
-		UR_y = ((Long) data.get("Red_UR_y")).intValue(); // y coordinate of the upper right corner of the home
-		// section
+
+		
+		lcd.clear();
+		if (redTeam == 9) {
+
+			corner = ((Long) data.get("RedCorner")).intValue(); // the starting corner
+			LL_x = ((Long) data.get("Red_LL_x")).intValue(); // x coordinate of the lower left corner of the home
+																// section
+			LL_y = ((Long) data.get("Red_LL_y")).intValue(); // y coordinate of the lower left corner of the home
+																// section
+			UR_x = ((Long) data.get("Red_UR_x")).intValue(); // x coordinate of the upper right corner of the home
+																// section
+			UR_y = ((Long) data.get("Red_UR_y")).intValue(); // y coordinate of the upper right corner of the home
+																// section
+			TN_LL_x = ((Long) data.get("TNR_LL_x")).intValue(); // x coordinate of the lower left of the tunnel
+			TN_LL_y = ((Long) data.get("TNR_LL_y")).intValue(); // y coordinate of the lower left of the tunnel
+			TN_UR_x = ((Long) data.get("TNR_UR_x")).intValue(); // x coordinate of the upper right of the tunnel
+			TN_UR_y = ((Long) data.get("TNR_UR_y")).intValue(); // y coordinate of the upper right of the tunnel
+			SZ_LL_x = ((Long) data.get("SZR_LL_x")).intValue(); // x coordinate of the can tree
+			SZ_LL_y = ((Long) data.get("SZR_LL_y")).intValue(); // y coordinate of the can tree
+			SZ_UR_x = ((Long) data.get("SZR_UR_x")).intValue(); // x coordinate of the can tree
+			SZ_UR_y = ((Long) data.get("SZR_UR_y")).intValue(); // y coordinate of the can tree
+			
+
+		} else {
+
+			corner = ((Long) data.get("GreenCorner")).intValue(); // the starting corner
+			LL_x = ((Long) data.get("Green_LL_x")).intValue(); // x coordinate of the lower left corner of the home
+																// section
+			LL_y = ((Long) data.get("Green_LL_y")).intValue(); // y coordinate of the lower left corner of the home
+																// section
+			UR_x = ((Long) data.get("Green_UR_x")).intValue(); // x coordinate of the upper right corner of the home
+																// section
+			UR_y = ((Long) data.get("Green_UR_y")).intValue(); // y coordinate of the upper right corner of the home
+																// section
+			TN_LL_x = ((Long) data.get("TNG_LL_x")).intValue(); // x coordinate of the lower left of the tunnel
+			TN_LL_y = ((Long) data.get("TNG_LL_y")).intValue(); // y coordinate of the lower left of the tunnel
+			TN_UR_x = ((Long) data.get("TNG_UR_x")).intValue(); // x coordinate of the upper right of the tunnel
+			TN_UR_y = ((Long) data.get("TNG_UR_y")).intValue(); // y coordinate of the upper right of the tunnel
+			SZ_LL_x = ((Long) data.get("SZG_LL_x")).intValue(); // x coordinate of the can tree
+			SZ_LL_y = ((Long) data.get("SZG_LL_y")).intValue(); // y coordinate of the can tree
+			SZ_UR_x = ((Long) data.get("SZG_UR_x")).intValue(); // x coordinate of the can tree
+			SZ_UR_y = ((Long) data.get("SZG_UR_y")).intValue(); // y coordinate of the can tree
+			
+
+		}
 
 		Island_LL_x = ((Long) data.get("Island_LL_x")).intValue(); // x coordinate of the lower left corner of the
 																	// island
@@ -101,65 +136,7 @@ public class Project {
 																	// island
 		Island_UR_x = ((Long) data.get("Island_UR_x")).intValue(); // x coordinate of the upper right corner of the
 																	// island
-		Island_UR_y = ((Long) data.get("Island_UR_y")).intValue(); // y coordinate of the upper right corner of the
-																	// islan
-		TN_LL_x = ((Long) data.get("TNR_LL_x")).intValue(); // x coordinate of the lower left of the tunnel
-		TN_LL_y = ((Long) data.get("TNR_LL_y")).intValue(); // y coordinate of the lower left of the tunnel
-		TN_UR_x = ((Long) data.get("TNR_UR_x")).intValue(); // x coordinate of the upper right of the tunnel
-		TN_UR_y = ((Long) data.get("TNR_UR_y")).intValue(); // y
-		SZR_LL_x = ((Long) data.get("SZR_LL_x")).intValue(); // x coordinate of the can tree
-		SZR_LL_y = ((Long) data.get("SZR_LL_y")).intValue(); // y coordinate of the can tree
-		SZR_UR_x = ((Long) data.get("SZR_UR_x")).intValue(); // x coordinate of the can tree
-		SZR_UR_y = ((Long) data.get("SZR_UR_y")).intValue(); // y coordinate of the can tree
-		
-		lcd.clear();
-//to be used for final demo not beta demo
-//		if (redTeam == 9) {
-//
-//			corner = ((Long) data.get("RedCorner")).intValue(); // the starting corner
-//			LL_x = ((Long) data.get("Red_LL_x")).intValue(); // x coordinate of the lower left corner of the home
-//																// section
-//			LL_y = ((Long) data.get("Red_LL_y")).intValue(); // y coordinate of the lower left corner of the home
-//																// section
-//			UR_x = ((Long) data.get("Red_UR_x")).intValue(); // x coordinate of the upper right corner of the home
-//																// section
-//			UR_y = ((Long) data.get("Red_UR_y")).intValue(); // y coordinate of the upper right corner of the home
-//																// section
-//			TN_LL_x = ((Long) data.get("TNR_LL_x")).intValue(); // x coordinate of the lower left of the tunnel
-//			TN_LL_y = ((Long) data.get("TNR_LL_y")).intValue(); // y coordinate of the lower left of the tunnel
-//			TN_UR_x = ((Long) data.get("TNR_UR_x")).intValue(); // x coordinate of the upper right of the tunnel
-//			TN_UR_y = ((Long) data.get("TNR_UR_y")).intValue(); // y coordinate of the upper right of the tunnel
-//			T_x = ((Long) data.get("SZR_LL")).intValue(); // x coordinate of the can tree
-//			T_y = ((Long) data.get("TR_y")).intValue(); // y coordinate of the can tree
-//
-//		} else {
-//
-//			corner = ((Long) data.get("GreenCorner")).intValue(); // the starting corner
-//			LL_x = ((Long) data.get("Green_LL_x")).intValue(); // x coordinate of the lower left corner of the home
-//																// section
-//			LL_y = ((Long) data.get("Green_LL_y")).intValue(); // y coordinate of the lower left corner of the home
-//																// section
-//			UR_x = ((Long) data.get("Green_UR_x")).intValue(); // x coordinate of the upper right corner of the home
-//																// section
-//			UR_y = ((Long) data.get("Green_UR_y")).intValue(); // y coordinate of the upper right corner of the home
-//																// section
-//			TN_LL_x = ((Long) data.get("TNG_LL_x")).intValue(); // x coordinate of the lower left of the tunnel
-//			TN_LL_y = ((Long) data.get("TNG_LL_y")).intValue(); // y coordinate of the lower left of the tunnel
-//			TN_UR_x = ((Long) data.get("TNG_UR_x")).intValue(); // x coordinate of the upper right of the tunnel
-//			TN_UR_y = ((Long) data.get("TNG_UR_y")).intValue(); // y coordinate of the upper right of the tunnel
-//			T_x = ((Long) data.get("TG_x")).intValue(); // x coordinate of the can tree
-//			T_y = ((Long) data.get("TG_y")).intValue(); // y coordinate of the can tree
-//
-//		}
-//
-//		Island_LL_x = ((Long) data.get("Island_LL_x")).intValue(); // x coordinate of the lower left corner of the
-//																	// island
-//		Island_LL_y = ((Long) data.get("Island_LL_y")).intValue(); // y coordinate of the lower left corner of the
-//																	// island
-//		Island_UR_x = ((Long) data.get("Island_UR_x")).intValue(); // x coordinate of the upper right corner of the
-//																	// island
-//		Island_UR_y = ((Long) data.get("Island_UR_y")).intValue(); // y coordinate of the upper right corner of the
-//																	// island
+		Island_UR_y = ((Long) data.get("Island_UR_y")).intValue(); // y coordinate of the upper right corner of the														// island
 
 		
 		
@@ -167,11 +144,6 @@ public class Project {
 		@SuppressWarnings("resource") // Because we don't bother to close this resource
 		SensorModes frontUSSensor = new EV3UltrasonicSensor(frontUSPort); // usSensor is the instance
 		SampleProvider frontUSDistance = frontUSSensor.getMode("Distance");// usDistance provides samples from
-
-
-//		@SuppressWarnings("resource") 
-//		SensorModes backUSSensor = new EV3UltrasonicSensor(backUSPort); // usSensor is the instance
-//		SampleProvider backUSDistance = backUSSensor.getMode("Distance");// usDistance provides samples from
 
 		@SuppressWarnings("resource")
 		SensorModes leftLightSensor = new EV3ColorSensor(leftLightPort);//lightSensor is the instance 
@@ -194,102 +166,23 @@ public class Project {
 
 		usLocal.fallingEdge();
 		lightLocal.localize();
-		Sound.beep();
-		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
-		
-		
-		
+		odometer.setXYT(30.48, 30.48, 0);
+		Sound.beep();		
 		Thread.sleep(5000);
-
-		Navigator oa = new Navigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
-		Sound.beep();
-		
-		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
-		oa.turnTo(angleA);
-		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-		
-		oa.turnTo(90);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		//Thread.sleep(1000);
-		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		oa.turnTo(angleC);
-		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-//		
-////		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-//		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		oa.turnTo(angleD);
-//		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
+		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
+		oa.TravelToTunnel(lightLocal, odometer);
+		//oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
+		//lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		//double angleC = oa.getDesAngle((SZ_LL_x)*TILE_SIZE,(SZ_LL_y)*TILE_SIZE);
+		//oa.turnTo(angleC);
+		//oa.travelTo((SZ_LL_x)*TILE_SIZE,(SZ_LL_y)*TILE_SIZE);
 //		Sound.beep();
 //		Sound.beep();
 //		Sound.beep();
 //		Sound.beep();
 //		Sound.beep();
-		//
-		/*
-		 * lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleB = oa.getDesAngle((TN_UR_x+0.5)*TILE_SIZE,(TN_UR_y-0.5)*TILE_SIZE);
-		*/
-		//upMotor.rotate(-90);
-		//oa.turnTo(angleB);
-//		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-//
-//		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		oa.turnTo(angleC);
-//		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//
-//		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		oa.turnTo(angleD);
-//		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-		
-
-
-
-
 		
 	}
-	public static double [][] SC0(double tN_LL_x2, double tN_LL_y2, double tN_UR_x2, double tN_UR_y2) {
-		int size = (int) Math.abs(tN_UR_x2 -tN_LL_x2);
-		double waypoints [][] = new double [2*(size+1)][2];
 
-		for(int i =0; i<2*(size+1);i++) {
-			if(i % 2 == 0){
-				waypoints[i][0] = tN_LL_x2 + i/2;
-				if(i % 4 == 0) {
-					waypoints[i][1] = tN_LL_y2 - 0.5;
-				}else {
-					waypoints[i][1] = tN_UR_y2 + 0.5;
-				}
-			}else {
-				waypoints [i][0] = waypoints[i-1][0];
-				if(i != 1 && 231 % i == 0) {
-					waypoints[i][1] = tN_LL_y2 - 0.5;
-				}else {
-					waypoints[i][1] = tN_UR_y2 + 0.5;
-				}
 
-			}
-		}
-		waypoints[0][0]= tN_LL_x2;
-		waypoints[0][1]= tN_LL_y2;
-
-		return waypoints;
-
-	}
 }
