@@ -60,8 +60,7 @@ public class ObstacleAvoidance implements Runnable {
 	private static final double TN_LL_y = Project.TN_LL_y; // y coordinate of the lower left of the tunnel
 	private static final double TN_UR_x = Project.TN_UR_x; // x coordinate of the upper right of the tunnel
 	private static final double TN_UR_y = Project.TN_UR_y; // y coordinate of the upper right of the tunnel
-	private static final double T_x = Project.T_x; // x coordinate of the ring tree
-	private static final double T_y = Project.T_y; // y coordinate of the ring tree
+
 
 
 	public ObstacleAvoidance(int[][] arr, Odometer odo, EV3LargeRegulatedMotor leftMotor,
