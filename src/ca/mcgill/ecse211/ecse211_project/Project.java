@@ -209,7 +209,11 @@ public class Project {
 		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
 		
 		oa.turnTo(90);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
+		lightLocal.localize();
+		odometer.setXYT(TN_LL_x-1, TN_LL_y, 0);
+		oa.travelTo((TN_LL_x-0.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
+		oa.turnTo(90);
+//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
 		//Thread.sleep(1000);
 		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
 		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));

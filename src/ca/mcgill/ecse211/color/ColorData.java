@@ -153,16 +153,16 @@ public class ColorData {
 		LCD.clear();
 		double redDist,greenDist,blueDist,yellowDist;
 		float [] RGBData;
-		Project.upMotor.setSpeed(180);
+		Searchtest.upMotor.setSpeed(180);
 		LCD.drawString("Object Detected", 0, 0);
-		Project.upMotor.rotate(180,true);
+		Searchtest.upMotor.rotate(180,true);
 		RGBData = calibrate();
 		redDist = EDistance(RGBData,RED_RANGE);
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
 		greenDist = EDistance(RGBData,GREEN_RANGE);
 		blueDist = EDistance(RGBData,BLUE_RANGE);
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);
-		Project.upMotor.rotate(-180,false);
+		Searchtest.upMotor.rotate(-180,false);
 	}
 	/**
 	 * This method takes in an integer as the specified color ID.
@@ -174,9 +174,9 @@ public class ColorData {
 		LCD.clear();
 		double redDist,greenDist,blueDist,yellowDist;
 		float [] RGBData;
-		Project.upMotor.setSpeed(180);
+		Searchtest.upMotor.setSpeed(180);
 		LCD.drawString("Object Detected", 0, 0);
-		Project.upMotor.rotate(180,true);
+		Searchtest.upMotor.rotate(180,true);
 		RGBData = calibrate();
 		redDist = EDistance(RGBData,RED_RANGE);
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
@@ -184,7 +184,7 @@ public class ColorData {
 		blueDist = EDistance(RGBData,BLUE_RANGE);
 		int result = smallestInInt(redDist,greenDist,blueDist,yellowDist);
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);		
-		Project.upMotor.rotate(-180,false);
+		Searchtest.upMotor.rotate(-180,false);
 		if(result == colorID) {
 			Sound.beep();
 		}else {
