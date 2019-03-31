@@ -54,7 +54,7 @@ public class Navigator {
 	 * @param TRACK
 	 * @param WHEEL_RAD
 	 */
-	public Navigator( Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
+	public Navigator(Odometer odo, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			final double TRACK, final double WHEEL_RAD) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
@@ -122,7 +122,7 @@ public class Navigator {
 		isNavigating = false;
 
 	}
-	public void TravelToTunnel(LightLocalizer lightLocal, Odometer odometer) {
+	public void TravelToTunnel(LightLocalizer lightLocal) {
 		double DES_x = 0;
 		double DES_y = 0;
 		double DES_angle = 0;
@@ -143,7 +143,7 @@ public class Navigator {
 //case (0,0)
 		if(corner == 0) {
 			
-			odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
+			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
 			if(isTunnelVertical) {
 				DES_x = TN_LL_x-1.5;
@@ -169,38 +169,36 @@ public class Navigator {
 			}
 		}
 		else if (corner == 1) {
-			
-			Sound.beep();
-			Sound.beep();
-			odometer.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
+
+			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
 			if(isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
 				DES_angle = 270;
-				LOC_x = DES_x + 0.5;
+				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
 				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_UR_x-0.5;
-				DEN_y = TN_UR_y+0.5;
+				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
 			}
 			else {
 
 				DES_x = TN_LL_x + 0.5;
 				DES_y = TN_LL_y - 1.5;
 				DES_angle = 0;
-				LOC_x = DES_x - 0.5;
-				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_LL_x-0.5;
-				DEN_y = TN_LL_y+0.5;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x - 0.5);
+				CEN_y = (LOC_y + 0.5);
+				DEN_x = TN_LL_x - 0.5;
+				DEN_y = TN_LL_y + 0.5;
 				
 			}
 		}
 		else if(corner == 2) {
 		
-			odometer.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
+			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
@@ -218,23 +216,23 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_LL_x+0.5;
-				DEN_y = TN_LL_y-0.5;
+				CEN_x = (LOC_x + 0.5);
+				CEN_y = (LOC_y - 0.5);
+				DEN_x = TN_LL_x + 0.5;
+				DEN_y = TN_LL_y - 0.5;
 			}
 			
 		}
 		else if(corner == 3) {
-			odometer.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
+			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
 			if(isTunnelVertical) {
-				DES_x = TN_LL_x + 0.5;
-				DES_y = TN_LL_y - 1.5;
+				DES_x = TN_LL_x - 0.5;
+				DES_y = TN_LL_y + 1.5;
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x + 0.5);
+				CEN_y = (LOC_y - 0.5);
 				DEN_x = TN_LL_x + 0.5;
 				DEN_y = TN_LL_y - 0.5;
 			}
@@ -244,10 +242,10 @@ public class Navigator {
 				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_UR_x+0.5;
-				DEN_y = TN_UR_y-0.5;
+				CEN_x = (LOC_x + 0.5);
+				CEN_y = (LOC_y + 0.5);
+				DEN_x = TN_UR_x + 0.5;
+				DEN_y = TN_UR_y - 0.5;
 			}
 		}
 		else {
@@ -271,28 +269,28 @@ public class Navigator {
 		double angleA = getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE);
 		turnTo(angleA);
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
-		System.out.println("DES_x"+odometer.getX()/TILE_SIZE);
-		System.out.println("DES_y"+odometer.getY()/TILE_SIZE);	
+		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
+		System.out.println("DES_y"+odo.getY()/TILE_SIZE);	
 		turnTo(DES_angle);
 		lightLocal.localize();
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
-		odometer.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
-		System.out.println("LOC_x"+odometer.getX()/TILE_SIZE);
-		System.out.println("LOC_y"+odometer.getY()/TILE_SIZE);
+		odo.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
+		System.out.println("LOC_x"+odo.getX()/TILE_SIZE);
+		System.out.println("LOC_y"+odo.getY()/TILE_SIZE);
 
 		double angle_turn = getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE);
 		turnTo(angle_turn);
 		travelTo(CEN_x*TILE_SIZE, CEN_y*TILE_SIZE);
-		System.out.println("CEN_x"+odometer.getX()/TILE_SIZE);
-		System.out.println("CEN_y"+odometer.getY()/TILE_SIZE);
+		System.out.println("CEN_x"+odo.getX()/TILE_SIZE);
+		System.out.println("CEN_y"+odo.getY()/TILE_SIZE);
 		double angle_turn_tunnel = getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE);
 		turnTo(angle_turn_tunnel);
 		travelTo(DEN_x*TILE_SIZE, DEN_x*TILE_SIZE);
-		System.out.println("DEN_x"+odometer.getX()/TILE_SIZE);
-		System.out.println("DEN_y"+odometer.getY()/TILE_SIZE);
+		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
+		System.out.println("DEN_y"+odo.getY()/TILE_SIZE);
 		Sound.beep();
 		Sound.beep();
 	}

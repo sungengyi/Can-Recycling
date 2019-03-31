@@ -167,78 +167,9 @@ public class Project {
 		usLocal.fallingEdge();
 		lightLocal.localize();
 		Sound.beep();
-		double [][] waypoints = SC0(TN_LL_x,TN_LL_y,TN_UR_x,TN_UR_y);
-		
-		
-		
-		Thread.sleep(5000);
-
-		Navigator oa = new Navigator(waypoints, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
+		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
-		
-		double angleA = oa.getDesAngle((TN_LL_x-1.5)*TILE_SIZE,(TN_LL_y+0.5)*TILE_SIZE);
-		oa.turnTo(angleA);
-		oa.travelTo((TN_LL_x-1.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-		
-		oa.turnTo(90);
-		lightLocal.localize();
-		odometer.setXYT(TN_LL_x-1, TN_LL_y, 0);
-		oa.travelTo((TN_LL_x-0.5)*TILE_SIZE, (TN_LL_y+0.5)*TILE_SIZE);
-		oa.turnTo(90);
-//		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		//Thread.sleep(1000);
-		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		oa.turnTo(angleC);
-		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-//		
-////		lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-//		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		oa.turnTo(angleD);
-//		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-		//
-		/*
-		 * lightLocal.correction(lightLocal.getLightData(leftLightIntensity), lightLocal.getLightData(rightLightIntensity));
-		double angleB = oa.getDesAngle((TN_UR_x+0.5)*TILE_SIZE,(TN_UR_y-0.5)*TILE_SIZE);
-		*/
-		//upMotor.rotate(-90);
-		//oa.turnTo(angleB);
-//		oa.travelTo((TN_UR_x+0.5)*TILE_SIZE, (TN_UR_y-0.5)*TILE_SIZE);
-//
-//		double angleC = oa.getDesAngle((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		oa.turnTo(angleC);
-//		oa.travelTo((SZR_LL_x)*TILE_SIZE,(SZR_LL_y)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//
-//		double angleD = oa.getDesAngle((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		oa.turnTo(angleD);
-//		oa.travelTo((SZR_UR_x)*TILE_SIZE,(SZR_UR_y-0.5)*TILE_SIZE);
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-//		Sound.beep();
-		
-
-
-
-
-		
+		oa.TravelToTunnel(lightLocal);
 	}
 
 
