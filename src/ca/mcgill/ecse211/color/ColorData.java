@@ -161,6 +161,45 @@ public class ColorData {
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
 		greenDist = EDistance(RGBData,GREEN_RANGE);
 		blueDist = EDistance(RGBData,BLUE_RANGE);
+		int color = smallestInInt(redDist,greenDist,blueDist,yellowDist);
+		if(Searchtest.HEAVY) {
+			if(color == RED) {
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+			}else if( color == YELLOW) {
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+			}else if(color == GREEN) {
+				Sound.playTone(Sound.BEEP, 1000);
+				Sound.playTone(Sound.BEEP, 1000);
+			}else if(color == BLUE) {
+				Sound.playTone(Sound.BEEP, 1000);
+			}else {
+				
+			}
+				
+		}else {
+			if(color == RED) {
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+			}else if( color == YELLOW) {
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+			}else if(color == GREEN) {
+				Sound.playTone(Sound.BEEP, 500);
+				Sound.playTone(Sound.BEEP, 500);
+			}else if(color == BLUE) {
+				Sound.playTone(Sound.BEEP, 500);
+			}else {
+				
+			}
+		}
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);
 		Searchtest.upMotor.rotate(180,false);
 	}
@@ -190,7 +229,7 @@ public class ColorData {
 		}else {
 			Sound.twoBeeps();
 		}
-		
+
 	}
 
 

@@ -21,9 +21,12 @@ import lejos.robotics.SampleProvider;
 
 public class Searchtest {
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 13.6;//Width of wheel axis
+	public static final double TRACK = 17;//Width of wheel axis
 	public static final double TILE_SIZE = 30.48;
-	public static final double OFF_SET = 2.5; // this is the offset from the 2 line-detecting light sensors to the wheel
+	public static final double CAN_RADIUS = 5.5; // this is the offset from the 2 line-detecting light sensors to the wheel
+	public static double HIT_GAP =0; //Radius of wheel
+	public static boolean HEAVY = false;
+
 
 	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static final Port leftLightPort = LocalEV3.get().getPort("S2");
@@ -138,27 +141,26 @@ public class Searchtest {
 		weightingTest();
 		ultraMotor.setSpeed(100);
 		//go back for claw to grab
-		leftMotor.rotate(-100,true);
-		rightMotor.rotate(-100,false);
+		leftMotor.rotate((convertDistance(WHEEL_RAD,-CAN_RADIUS)),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,-CAN_RADIUS)),false);
 
 		//open
 		ultraMotor.rotate(100);
 
 		//go forward
-		leftMotor.rotate(400,true);
-		rightMotor.rotate(400,false);
+		leftMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + 2*CAN_RADIUS))),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + 2*CAN_RADIUS))),false);
 
 		//identify
 		color.identify();
 		
-		leftMotor.rotate(400,true);
-		rightMotor.rotate(400,false);
-
+		leftMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),false);
 		//grab
 		ultraMotor.rotate(-100);
 		
-		leftMotor.rotate(800,true);
-		rightMotor.rotate(800,false);
+		leftMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),false);
 		
 
 
@@ -168,12 +170,11 @@ public class Searchtest {
 		ultraMotor.setAcceleration(15000);
 		ultraMotor.rotate(20);
 		ultraMotor.rotate(-20);
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-
-		}
-		System.out.println("The can is "+getUSData(frontUSSensor)+"");
+		HIT_GAP = getUSData(frontUSSensor);
+		if(HIT_GAP < 7)  HEAVY=true;
+		else if(HIT_GAP > 15) HIT_GAP = 15;
+			
+		System.out.println("The can is "+HIT_GAP+"away.");
 	}
 	public static void detectForCans(double range) {
 		leftMotor.forward();
@@ -183,23 +184,24 @@ public class Searchtest {
 		double distance;
 		boolean detected = false;
 		boolean switchs = true;
+		int counter = 0;
 		while(range > 5 && !detected) {
 			
 			start = System.currentTimeMillis();
 			distance = getUSData(frontUSDistance);
-			System.out.println(distance);
 			if(distance>range) {
 				if(switchs) {
 					leftMotor.forward();
 					rightMotor.backward();
-					switchs = !switchs;
+					counter++;
+					if(counter%20==0) switchs = !switchs;
 					
 				}else {
-				leftMotor.forward();
-				rightMotor.backward();
+				
 				leftMotor.backward();
 				rightMotor.forward();
-				switchs = !switchs;   
+				counter++;
+				if(counter%20==0) switchs = !switchs;
 			
 				}
 			}
@@ -221,7 +223,7 @@ public class Searchtest {
 			end = System.currentTimeMillis();
 			if((end - start)< period) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(30);
 				} catch (InterruptedException e) {
 				}
 			}
@@ -230,6 +232,7 @@ public class Searchtest {
 
 
 	}
+	
 	private static int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
