@@ -42,7 +42,7 @@ public class Odometer extends OdometerData implements Runnable {
   
 
 
-  private static final long ODOMETER_PERIOD = 100; // odometer update period in ms
+  private static final long ODOMETER_PERIOD = 50; // odometer update period in ms
 
   /**
    * This is the default constructor of this class. It initiates all motors and variables once.It
@@ -112,7 +112,8 @@ public class Odometer extends OdometerData implements Runnable {
   // run method (required for Thread)
   public void run() {
     long updateStart, updateEnd;
-
+    leftMotor.resetTachoCount();
+    rightMotor.resetTachoCount();
     while (true) {
       updateStart = System.currentTimeMillis();
 

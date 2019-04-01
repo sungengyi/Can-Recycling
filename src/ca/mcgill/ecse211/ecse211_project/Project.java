@@ -56,13 +56,13 @@ public class Project {
 		public static double SZ_UR_y = 0;
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 13.6;//Width of wheel axis
+	public static final double TRACK = 17;//Width of wheel axis
 	public static final double TILE_SIZE = 30.48;
 	public static final double OFF_SET = 2.5; // this is the offset from the 2 line-detecting light sensors to the wheel
 
 	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
-	private static final Port leftLightPort = LocalEV3.get().getPort("S1");
-	private static final Port rightLightPort = LocalEV3.get().getPort("S4");
+	private static final Port leftLightPort = LocalEV3.get().getPort("S4");
+	private static final Port rightLightPort = LocalEV3.get().getPort("S1");
 	private static final Port frontUSPort = LocalEV3.get().getPort("S3");
 //	private static final Port backUSPort = LocalEV3.get().getPort("S2");
 
@@ -72,10 +72,11 @@ public class Project {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
-	//static final EV3LargeRegulatedMotor clawMotor =
-		//	new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final EV3LargeRegulatedMotor upMotor =
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
+	public static final EV3LargeRegulatedMotor ultraMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
+	@SuppressWarnings("deprecation")
 	public static void main (String [] args) throws OdometerExceptions, InterruptedException, ObstacleAvoidanceException{
 		
 		Map data = wifiTest.WIFI();
@@ -138,7 +139,7 @@ public class Project {
 																	// island
 		Island_UR_y = ((Long) data.get("Island_UR_y")).intValue(); // y coordinate of the upper right corner of the														// island
 
-		
+		ultraMotor.lock(500);
 		
 		int buttonChoice;
 		@SuppressWarnings("resource") // Because we don't bother to close this resource
@@ -157,13 +158,15 @@ public class Project {
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 
 		//Instances of localizers
-		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightIntensity, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
+		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightIntensity, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		UltrasonicLocalizer usLocal = new UltrasonicLocalizer (frontUSDistance, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
-		
+		Display odometryDisplay = new Display(lcd); // No need to change
+		Thread odoDisplay = new Thread(odometryDisplay);
+		odoDisplay.start();
 
+		lcd.clear();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
-
 		usLocal.fallingEdge();
 		lightLocal.localize();
 		Sound.beep();

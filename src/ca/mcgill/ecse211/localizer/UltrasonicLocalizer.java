@@ -5,15 +5,15 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class UltrasonicLocalizer{
-	private static Odometer odo = null;
+	private Odometer odo;
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
 	private SampleProvider usDistance;
 	private final double TRACK; // The width of the wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
 	private static final int ROTATE_SPEED = 250; //Speed of the motors
-	private static final int WALL_DIST = 30;//Distance from the sensor to the wall
-	private static final int THRESHOLD = 5;//Threshold added/subtracted from the wall distance when reading the wall
+	private static final int WALL_DIST = 20;//Distance from the sensor to the wall
+	private static final int THRESHOLD = 3;//Threshold added/subtracted from the wall distance when reading the wall
 	private static final int F_CONSTANT1 = 230; //Tweaked constant for falling edge angle conversion
 	private static final int F_CONSTANT2 = 50; //Tweaked constant for falling edge angle conversion
 	private static final int R_CONSTANT1 = 225; //Constant for rising edge angle conversion

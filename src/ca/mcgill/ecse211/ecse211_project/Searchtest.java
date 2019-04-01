@@ -27,46 +27,153 @@ public class Searchtest {
 
 	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static final Port leftLightPort = LocalEV3.get().getPort("S2");
-	private static final Port rightLightPort = LocalEV3.get().getPort("S4");
+	private static final Port rightLightPort = LocalEV3.get().getPort("S1");
 	private static final Port frontUSPort = LocalEV3.get().getPort("S3");
 	public static final EV3LargeRegulatedMotor leftMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	public static final EV3LargeRegulatedMotor ultraMotor =
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
+	@SuppressWarnings("resource")
+	public static final SensorModes leftLightSensor = new EV3ColorSensor(leftLightPort);//lightSensor is the instance 
+	public static final SampleProvider colorData = leftLightSensor.getMode("RGB");
 
 	@SuppressWarnings("resource") // Because we don't bother to close this resource
 	public static SensorModes frontUSSensor = new EV3UltrasonicSensor(frontUSPort); // usSensor is the instance
 	public static SampleProvider frontUSDistance = frontUSSensor.getMode("Distance");// usDistance provides samples from
 	public static final EV3LargeRegulatedMotor upMotor =
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 
 	public static void main(String [] args) throws IOException, OdometerExceptions {	
-		@SuppressWarnings("resource")
-		SensorModes leftLightSensor = new EV3ColorSensor(leftLightPort);//lightSensor is the instance 
-		SampleProvider colorData = leftLightSensor.getMode("RGB");
-//		RemoteRequestEV3 slaveBrick = new RemoteRequestEV3("10.0.1.2");
-//		SampleProvider colorData = slaveBrick.createSampleProvider("S1", "EV3ColorSensor", "RGB");
-//		RegulatedMotor upMotor = slaveBrick.createRegulatedMotor("A", 'L');
-		ColorData color = new ColorData(colorData);
-		double[][] x = new double [4][4];
+
+		//		RemoteRequestEV3 slaveBrick = new RemoteRequestEV3("10.0.1.2");
+		//		SampleProvider colorData = slaveBrick.createSampleProvider("S1", "EV3ColorSensor", "RGB");
+		//		RegulatedMotor upMotor = slaveBrick.createRegulatedMotor("A", 'L');
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 		Thread odoThread = new Thread(odometer);
-		odoThread.start();
-		Navigator nimbus = new Navigator(x, odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
-		leftMotor.setSpeed(250);
-		rightMotor.setSpeed(250);
-		leftMotor.forward();
-		rightMotor.backward();
-		int i =0;
-		while(true) {
-			detectForCans(43);
-			color.identify();
-			nimbus.turnTo(nimbus.getDesAngle(TILE_SIZE+i,0));
-			nimbus.travelTo(TILE_SIZE+i, 0);
-			nimbus.turnTo(0);
-			if(i==5) break;
-			i++;
+		odoThread.start();	
+		ColorData color = new ColorData(colorData);
+
+
+		//-------------------Weighting Test------------------------------
+		//---------------------------------------------------------------
+		//The ultrasonic arm hits cans in front of it, push cans by a distance. 
+		//Then it will print ultrasonic reading(distance) to the screen.
+		//Find the best acceleration and speed that will diffrentiate heavy cans and light cans.
+		//---------------------------------------------------------------
+		//Runs in a loop. It's very slow to restart a program.
+		//---------------------------------------------------------------
+		//Comment this when not needed.
+		//---------------------------------------------------------------
+		//--------------------TESTING BODY-------------------------------
+		//		for(int i = 0; i<=16;i++) {
+		//			weightingTest();
+		//			try {
+		//				Thread.sleep(8000);
+		//			} catch (InterruptedException e) {
+		//
+		//			}
+		//		}
+		//------------------TESTING END-----------------------------------
+		//----------------------------------------------------------------
+
+
+
+		//-------------------Color Identify Test------------------------------
+		//---------------------------------------------------------------
+		//The color arm is initially placed on the left.
+		//Open the ultrasonic arm and place cans.
+		//---------------------------------------------------------------
+		//---------------------------------------------------------------
+		//Comment this when not needed.
+		//Runs in a thread.
+		//---------------------------------------------------------------
+		//--------------------TESTING BODY-------------------------------
+//		while(true) {
+//			color.identify();
+//			try {
+//				Thread.sleep(3000);
+//			} catch (InterruptedException e) {
+//			}
+//		}
+		//------------------TESTING END
+		//----------------------------------------------------------------
+
+
+		//-------------------Searching Test------------------------------
+		//---------------------------------------------------------------
+		//The robot spins clockwise and detect for any can in its range.
+		//When a can is detected, robot moves by half of the distance the can was detected.
+		//It will restart scanning for cans and will resursively do the above actions until the can is very near.
+		//---------------------------------------------------------------
+		//---------------------------------------------------------------
+		//Comment this when not needed.
+		//---------------------------------------------------------------
+		//--------------------TESTING BODY-------------------------------
+		SearchAndGrabTest();
+		//------------------TESTING END
+		//----------------------------------------------------------------
+
+
+	}
+	public static void SearchAndGrabTest() {
+		ColorData color = new ColorData(colorData);
+		leftMotor.setSpeed(200);
+		rightMotor.setSpeed(200);
+		leftMotor.setAcceleration(10000);
+		rightMotor.setAcceleration(10000);
+		upMotor.setSpeed(200);
+
+		//find the can and stop in front of it
+		detectForCans(43);
+		do {
+			leftMotor.forward();
+			rightMotor.forward();
+		}while(getUSData(frontUSSensor)<10000);
+
+		leftMotor.stop(true);
+		rightMotor.stop();
+
+		weightingTest();
+		ultraMotor.setSpeed(100);
+		//go back for claw to grab
+		leftMotor.rotate(-100,true);
+		rightMotor.rotate(-100,false);
+
+		//open
+		ultraMotor.rotate(100);
+
+		//go forward
+		leftMotor.rotate(400,true);
+		rightMotor.rotate(400,false);
+
+		//identify
+		color.identify();
+		
+		leftMotor.rotate(400,true);
+		rightMotor.rotate(400,false);
+
+		//grab
+		ultraMotor.rotate(-100);
+		
+		leftMotor.rotate(800,true);
+		rightMotor.rotate(800,false);
+		
+
+
+	}
+	public static void weightingTest() {
+		ultraMotor.setSpeed(1000);
+		ultraMotor.setAcceleration(15000);
+		ultraMotor.rotate(20);
+		ultraMotor.rotate(-20);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+
 		}
+		System.out.println("The can is "+getUSData(frontUSSensor)+"");
 	}
 	public static void detectForCans(double range) {
 		leftMotor.forward();
@@ -75,11 +182,28 @@ public class Searchtest {
 		double period = 100;
 		double distance;
 		boolean detected = false;
-		while(range > 5 || !detected) {
+		boolean switchs = true;
+		while(range > 5 && !detected) {
+			
 			start = System.currentTimeMillis();
 			distance = getUSData(frontUSDistance);
 			System.out.println(distance);
-			if(distance < 3) {
+			if(distance>range) {
+				if(switchs) {
+					leftMotor.forward();
+					rightMotor.backward();
+					switchs = !switchs;
+					
+				}else {
+				leftMotor.forward();
+				rightMotor.backward();
+				leftMotor.backward();
+				rightMotor.forward();
+				switchs = !switchs;   
+			
+				}
+			}
+			if(distance < 5) {
 				leftMotor.rotate(convertDistance(WHEEL_RAD, distance/2), true);
 				rightMotor.rotate(convertDistance(WHEEL_RAD, distance/2), false);
 				leftMotor.stop(true);
@@ -97,7 +221,7 @@ public class Searchtest {
 			end = System.currentTimeMillis();
 			if((end - start)< period) {
 				try {
-					Thread.sleep(30);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
 			}

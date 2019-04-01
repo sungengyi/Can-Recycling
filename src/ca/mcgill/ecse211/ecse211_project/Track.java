@@ -5,11 +5,11 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Track {
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 13;//Width of wheel axis
+	public static final double TRACK = 17.5;//Width of wheel axis
 	public static final EV3LargeRegulatedMotor leftMotor =
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	public static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	public static final EV3LargeRegulatedMotor rightMotor =
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static void main(String [] args) {
 		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, 360), true);
 		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, 360), false);

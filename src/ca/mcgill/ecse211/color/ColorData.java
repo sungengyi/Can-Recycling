@@ -155,14 +155,14 @@ public class ColorData {
 		float [] RGBData;
 		Searchtest.upMotor.setSpeed(180);
 		LCD.drawString("Object Detected", 0, 0);
-		Searchtest.upMotor.rotate(180,true);
+		Searchtest.upMotor.rotate(-180,true);
 		RGBData = calibrate();
 		redDist = EDistance(RGBData,RED_RANGE);
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
 		greenDist = EDistance(RGBData,GREEN_RANGE);
 		blueDist = EDistance(RGBData,BLUE_RANGE);
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);
-		Searchtest.upMotor.rotate(-180,false);
+		Searchtest.upMotor.rotate(180,false);
 	}
 	/**
 	 * This method takes in an integer as the specified color ID.

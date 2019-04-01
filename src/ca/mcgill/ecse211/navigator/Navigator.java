@@ -62,6 +62,12 @@ public class Navigator {
 		this.WHEEL_RAD = WHEEL_RAD;
 		this.odo = odo;
 
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
+
+		leftMotor.setAcceleration(500);
+		rightMotor.setAcceleration(500);
+
 	}
 
 	public void travelTo(double x, double y) {
@@ -71,12 +77,6 @@ public class Navigator {
 
 		// the absolute distance between the initial position and the final position
 		double distance = Math.sqrt(Math.pow(x - xCur, 2) + Math.pow(y - yCur, 2));
-
-		leftMotor.setSpeed(FORWARD_SPEED);
-		rightMotor.setSpeed(FORWARD_SPEED);
-
-		leftMotor.setAcceleration(500);
-		rightMotor.setAcceleration(500);
 
 		leftMotor.rotate(convertDistance(WHEEL_RAD, distance), true);
 		rightMotor.rotate(convertDistance(WHEEL_RAD, distance), false);
@@ -107,14 +107,6 @@ public class Navigator {
 
 		double dtheta = (720 - position[2] + theta) % 360;
 		dtheta = (dtheta > 180) ? dtheta - 360 : dtheta;
-
-		leftMotor.setAcceleration(500);
-		rightMotor.setAcceleration(500);
-		
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
-		//System.out.println("theta" + (int)theta + "dtheta"+ (int)dtheta);
-		// theta should be negative if turnning left
 		
 		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, dtheta), true);
 		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, dtheta), false);
@@ -226,8 +218,8 @@ public class Navigator {
 		else if(corner == 3) {
 			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
 			if(isTunnelVertical) {
-				DES_x = TN_LL_x - 0.5;
-				DES_y = TN_LL_y + 1.5;
+				DES_x = TN_UR_x - 0.5;
+				DES_y = TN_UR_y + 1.5;
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
@@ -253,44 +245,58 @@ public class Navigator {
 		}
 
 		//Sound.beep();
-		System.out.print("vertical: " + isTunnelVertical);
+//		System.out.print("vertical: " + isTunnelVertical);
+//
+//		System.out.print(DES_x + " des x");
+//		System.out.print(DES_y + " des y");
+//		System.out.println(DES_angle + " angle");
+//		System.out.println("loc x" + LOC_x);
+//		System.out.println("loc y"  + LOC_y);
+//		System.out.println("CEN x " + CEN_x);
+//		System.out.println("cen y" + CEN_y);
+//		System.out.println("den x " + DEN_x);
+//		System.out.println("den y " + DEN_y);
 
-		System.out.print(DES_x + " des x");
-		System.out.print(DES_y + " des y");
-		System.out.println(DES_angle + " angle");
-		System.out.println("loc x" + LOC_x);
-		System.out.println("loc y"  + LOC_y);
-		System.out.println("CEN x " + CEN_x);
-		System.out.println("cen y" + CEN_y);
-		System.out.println("den x " + DEN_x);
-		System.out.println("den y " + DEN_y);
 
-
-		double angleA = getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE);
-		turnTo(angleA);
+		turnTo(getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE));
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
-		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
-		System.out.println("DES_y"+odo.getY()/TILE_SIZE);	
+//		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
+//		System.out.println("DES_y"+odo.getY()/TILE_SIZE);
+//		System.out.println("Angle "+ odo.getT());
+		
+		
 		turnTo(DES_angle);
 		lightLocal.localize();
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
+//		System.out.println("LOC_x"+odo.getX()/TILE_SIZE);
+//		System.out.println("LOC_y"+odo.getY()/TILE_SIZE);
 		odo.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
-		System.out.println("LOC_x"+odo.getX()/TILE_SIZE);
-		System.out.println("LOC_y"+odo.getY()/TILE_SIZE);
+		
 
-		double angle_turn = getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE);
-		turnTo(angle_turn);
+		
+		
+		turnTo(getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE));
 		travelTo(CEN_x*TILE_SIZE, CEN_y*TILE_SIZE);
-		System.out.println("CEN_x"+odo.getX()/TILE_SIZE);
-		System.out.println("CEN_y"+odo.getY()/TILE_SIZE);
-		double angle_turn_tunnel = getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE);
-		turnTo(angle_turn_tunnel);
-		travelTo(DEN_x*TILE_SIZE, DEN_x*TILE_SIZE);
-		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
-		System.out.println("DEN_y"+odo.getY()/TILE_SIZE);
+		odo.setX(CEN_x*TILE_SIZE);
+		odo.setY(CEN_y*TILE_SIZE);
+//		System.out.println("CEN_x"+odo.getX()/TILE_SIZE);
+//		System.out.println("CEN_y"+odo.getY()/TILE_SIZE);
+//		System.out.println("Angle "+ odo.getT());
+		
+		
+		
+		turnTo(getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE));
+		travelTo(DEN_x*TILE_SIZE, DEN_y*TILE_SIZE);
+		odo.setX(DEN_x*TILE_SIZE);
+		odo.setY(DEN_y*TILE_SIZE);
+//		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
+//		System.out.println("DEN_y"+odo.getY()/TILE_SIZE);
+//		System.out.println("Angle"+odo.getT());
+	
+
 		Sound.beep();
 		Sound.beep();
 	}
