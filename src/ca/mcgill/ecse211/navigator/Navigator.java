@@ -135,9 +135,9 @@ public class Navigator {
 //case (0,0)
 		if(corner == 0) {
 			
-			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
+			odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
-			if(isTunnelVertical) {
+			if(!isTunnelVertical) {
 				DES_x = TN_LL_x-1.5;
 				DES_y = TN_LL_y+0.5;
 				DES_angle = 90;
@@ -161,9 +161,11 @@ public class Navigator {
 			}
 		}
 		else if (corner == 1) {
-
-			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
-			if(isTunnelVertical) {
+			
+			Sound.beep();
+			Sound.beep();
+			odometer.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
+			if(!isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
 				DES_angle = 270;
@@ -176,24 +178,24 @@ public class Navigator {
 			}
 			else {
 
-				DES_x = TN_LL_x + 0.5;
-				DES_y = TN_LL_y - 1.5;
+				DES_x = TN_LL_x +0.5;
+				DES_y = TN_LL_y -1.5;
 				DES_angle = 0;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x - 0.5);
-				CEN_y = (LOC_y + 0.5);
-				DEN_x = TN_LL_x - 0.5;
-				DEN_y = TN_LL_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x-0.5;
+				DEN_y = TN_UR_y+0.5;
 				
 			}
 		}
 		else if(corner == 2) {
 		
-			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
-			if(isTunnelVertical) {
-				DES_x = TN_UR_x + 1.5;
-				DES_y = TN_UR_y - 0.5;
+			odometer.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
+			if(!isTunnelVertical) {
+				DES_x = TN_UR_x + 1.7;
+				DES_y = TN_UR_y - 0.7;
 				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
@@ -208,23 +210,23 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x + 0.5);
-				CEN_y = (LOC_y - 0.5);
-				DEN_x = TN_LL_x + 0.5;
-				DEN_y = TN_LL_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_LL_x+0.5;
+				DEN_y = TN_LL_y-0.5;
 			}
 			
 		}
 		else if(corner == 3) {
-			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
+			odometer.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
 			if(isTunnelVertical) {
 				DES_x = TN_UR_x - 0.5;
 				DES_y = TN_UR_y + 1.5;
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x + 0.5);
-				CEN_y = (LOC_y - 0.5);
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_LL_x + 0.5;
 				DEN_y = TN_LL_y - 0.5;
 			}
@@ -234,10 +236,10 @@ public class Navigator {
 				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x + 0.5);
-				CEN_y = (LOC_y + 0.5);
-				DEN_x = TN_UR_x + 0.5;
-				DEN_y = TN_UR_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 			}
 		}
 		else {
