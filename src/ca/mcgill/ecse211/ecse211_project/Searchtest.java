@@ -49,10 +49,6 @@ public class Searchtest {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 
 	public static void main(String [] args) throws IOException, OdometerExceptions {	
-
-		//		RemoteRequestEV3 slaveBrick = new RemoteRequestEV3("10.0.1.2");
-		//		SampleProvider colorData = slaveBrick.createSampleProvider("S1", "EV3ColorSensor", "RGB");
-		//		RegulatedMotor upMotor = slaveBrick.createRegulatedMotor("A", 'L');
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();	

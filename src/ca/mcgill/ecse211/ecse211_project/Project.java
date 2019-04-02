@@ -1,12 +1,12 @@
 package ca.mcgill.ecse211.ecse211_project;
 
 import java.util.Map;
+
 import ca.mcgill.ecse211.WiFiClient.wifiTest.wifiTest;
 import ca.mcgill.ecse211.color.Display;
 import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.localizer.UltrasonicLocalizer;
 import ca.mcgill.ecse211.navigator.Navigator;
-import ca.mcgill.ecse211.navigator.ObstacleAvoidanceException;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import lejos.hardware.Sound;
@@ -77,7 +77,7 @@ public class Project {
 	public static final EV3LargeRegulatedMotor ultraMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	@SuppressWarnings("deprecation")
-	public static void main (String [] args) throws OdometerExceptions, InterruptedException, ObstacleAvoidanceException{
+	public static void main (String [] args) throws OdometerExceptions, InterruptedException{
 		
 		Map data = wifiTest.WIFI();
 	
