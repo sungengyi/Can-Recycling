@@ -317,6 +317,58 @@ public class Navigator {
 		Sound.beep();
 		Sound.beep();
 	}
+	public void TravelToSearchArea() {
+		double des_x  = 0;
+		double des_y = 0;
+		if(corner == 0) {
+			des_x = SZ_LL_x;
+			des_y = SZ_LL_y;
+		}
+		else if(corner == 1) {
+			des_x = SZ_UR_x;
+			des_y = SZ_LL_y;
+		}
+		else if (corner == 2) {
+			des_x = SZ_UR_x;
+			des_y = SZ_UR_y;
+		}
+		else if(corner == 3) {
+			
+			des_x = SZ_LL_x;
+			des_y = SZ_UR_y;
+		}
+		else {
+			System.out.println("gg fam");
+		}
+		turnTo(getDesAngle(des_x*TILE_SIZE,des_y*TILE_SIZE));
+		travelTo(des_x*TILE_SIZE,des_y*TILE_SIZE);
+		turnTo(0);		
+	}
+	public void TravelToBase() {
+		double des_x = 0;
+		double des_y = 0;
+		if(corner == 0) {
+			des_x = LL_x;
+			des_y = LL_y;
+		}
+		else if(corner == 1) {
+			des_x = UR_x;
+			des_y = LL_y;
+		}
+		else if(corner == 2) {
+			des_x = UR_x;
+			des_y = UR_y;
+		}
+		else if(corner == 3) {
+			des_x = LL_x;
+			des_y = UR_y;
+		}
+		else {
+			System.out.print(" might as well die ");
+		}
+		turnTo(getDesAngle(SZ_LL_x*des_x,des_y*TILE_SIZE));
+		travelTo(des_x*TILE_SIZE,des_y*TILE_SIZE);
+	}
 	public void TravelBackToTunnel(LightLocalizer lightLocal) {
 		double DES_x = 0;
 		double DES_y = 0;
@@ -341,26 +393,26 @@ public class Navigator {
 			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
 			if(isTunnelVertical) {
-				DES_x = TN_LL_x-1.5;
-				DES_y = TN_LL_y+0.5;
+				DES_x = TN_LL_x+1.5;
+				DES_y = TN_LL_y-0.5;
 				DES_angle = 90;
-				LOC_x = DES_x + 0.5;
-				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_UR_x+0.5;
-				DEN_y = TN_UR_y-0.5;
-			}
-			else {
-				DES_x = TN_LL_x +0.5;
-				DES_y = TN_LL_y -1.5;
-				DES_angle = 0;
-				LOC_x = DES_x + 0.5;
+				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
 				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_UR_x-0.5;
 				DEN_y = TN_UR_y+0.5;
+			}
+			else {
+				DES_x = TN_LL_x -0.5;
+				DES_y = TN_LL_y +1.5;
+				DES_angle = 0;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 			}
 		}
 		else if (corner == 1) {
@@ -369,27 +421,27 @@ public class Navigator {
 			Sound.beep();
 			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
 			if(isTunnelVertical) {
-				DES_x = TN_UR_x + 1.5;
-				DES_y = TN_UR_y - 0.5;
+				DES_x = TN_UR_x - 1.5;
+				DES_y = TN_UR_y + 0.5;
 				DES_angle = 270;
-				LOC_x = DES_x - 0.5;
-				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_LL_x-0.5;
-				DEN_y = TN_LL_y+0.5;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_LL_x+0.5;
+				DEN_y = TN_LL_y-0.5;
 			}
 			else {
 
-				DES_x = TN_LL_x +0.5;
-				DES_y = TN_LL_y -1.5;
+				DES_x = TN_LL_x -0.5;
+				DES_y = TN_LL_y +1.5;
 				DES_angle = 0;
-				LOC_x = DES_x + 0.5;
-				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_UR_x-0.5;
-				DEN_y = TN_UR_y+0.5;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 				
 			}
 		}
@@ -397,52 +449,52 @@ public class Navigator {
 		
 			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(isTunnelVertical) {
-				DES_x = TN_UR_x + 1.5;
-				DES_y = TN_UR_y - 0.5;
+				DES_x = TN_UR_x - 1.5;
+				DES_y = TN_UR_y + 0.5;
 				DES_angle = 270;
-				LOC_x = DES_x - 0.5;
-				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_LL_x-0.5;
-				DEN_y = TN_LL_y+0.5;
-			}
-			else {
-				DES_x = TN_UR_x - 0.5;
-				DES_y = TN_UR_y + 1.5;
-				DES_angle = 180;
-				LOC_x = DES_x - 0.5;
+				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
 				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_y = (LOC_y+0.5);
 				DEN_x = TN_LL_x+0.5;
 				DEN_y = TN_LL_y-0.5;
+			}
+			else {
+				DES_x = TN_UR_x + 0.5;
+				DES_y = TN_UR_y - 1.5;
+				DES_angle = 180;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
 			}
 			
 		}
 		else if(corner == 3) {
 			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
 			if(isTunnelVertical) {
-				DES_x = TN_UR_x - 0.5;
-				DES_y = TN_UR_y + 1.5;
+				DES_x = TN_UR_x + 0.5;
+				DES_y = TN_UR_y - 1.5;
 				DES_angle = 180;
-				LOC_x = DES_x - 0.5;
-				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_LL_x + 0.5;
-				DEN_y = TN_LL_y - 0.5;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
+				DEN_x = TN_LL_x - 0.5;
+				DEN_y = TN_LL_y + 0.5;
 			}
 			else {
-				DES_x = TN_LL_x - 1.5;
-				DES_y = TN_LL_y + 0.5;
+				DES_x = TN_LL_x + 1.5;
+				DES_y = TN_LL_y - 0.5;
 				DES_angle = 90;
-				LOC_x = DES_x + 0.5;
-				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_UR_x+0.5;
-				DEN_y = TN_UR_y-0.5;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y-0.5);
+				DEN_x = TN_UR_x-0.5;
+				DEN_y = TN_UR_y+0.5;
 			}
 		}
 		else {
