@@ -10,9 +10,15 @@ public class LightLocalizer{
 	private SampleProvider rightLightIntensity;
 
 	private final double TRACK;
+<<<<<<< HEAD
 	private static final double SENSOR_GAP = 3.2; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
 	private static final int ROTATE_SPEED = 120; //Speed of robot
+=======
+	private static final double SENSOR_GAP = 3.6; //The width of wheel axis
+	private final double WHEEL_RAD; //The radius of wheel
+	private static final int ROTATE_SPEED = 85; //Speed of robot
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 	/**
 	 * Default constructor initializes all fields of LightLocalizer.
 	 * @param lightIntensity
@@ -86,12 +92,17 @@ public class LightLocalizer{
 		rightMotor.rotate(convertDistance(WHEEL_RAD,SENSOR_GAP),false);
 	}
 	public void turn(double angle) {
+<<<<<<< HEAD
 		leftMotor.setSpeed(3*ROTATE_SPEED);
 		rightMotor.setSpeed(3*ROTATE_SPEED);
 		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, angle), true);
 		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, angle), false);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
+=======
+		leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, angle), true);
+		rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, angle), false);
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 	}
 	public void correction(double left, double right) {
 		boolean leftIsOnLine = false,
@@ -107,12 +118,21 @@ public class LightLocalizer{
 			}else {
 				if(lineDetected(left, leftLightIntensity) && !leftIsOnLine) {
 					//System.out.println("case1");
+<<<<<<< HEAD
 					
 					//System.out.println("c1");
 					leftIsOnLine = true;
 					leftMotor.stop(true);
 					rightMotor.stop();
 					if(leftIsOnLine && (rightIsOnLine||lineDetected(right, rightLightIntensity))) {
+=======
+					leftMotor.stop(true);
+					rightMotor.stop();
+					//System.out.println("c1");
+					leftIsOnLine = true;
+					
+					if(leftIsOnLine && rightIsOnLine) {
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 						leftMotor.stop(true);
 						rightMotor.stop();
 						break;
@@ -121,6 +141,7 @@ public class LightLocalizer{
 				}
 				if(lineDetected(right, rightLightIntensity) && !rightIsOnLine) {
 					//System.out.println("case2");
+<<<<<<< HEAD
 					rightIsOnLine = true;
 					leftMotor.stop(true);
 					rightMotor.stop();
@@ -128,6 +149,15 @@ public class LightLocalizer{
 					
 					
 					if(rightIsOnLine && (leftIsOnLine||lineDetected(left, leftLightIntensity))) {
+=======
+
+					leftMotor.stop(true);
+					rightMotor.stop();
+					//System.out.println("c2");
+					rightIsOnLine = true;
+					
+					if(rightIsOnLine && leftIsOnLine) {
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 						leftMotor.stop(true);
 						rightMotor.stop();
 						break;
@@ -151,10 +181,16 @@ public class LightLocalizer{
 	 * 
 	 */
 	public void localize() {
+<<<<<<< HEAD
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 		leftMotor.setAcceleration(5000);
 		rightMotor.setAcceleration(5000);
+=======
+
+		leftMotor.setAcceleration(10000);
+		rightMotor.setAcceleration(10000);
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		double left = getLightData(leftLightIntensity);
 		double right = getLightData(rightLightIntensity);
 		correction(left,right);

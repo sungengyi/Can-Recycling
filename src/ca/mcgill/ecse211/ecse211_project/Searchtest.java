@@ -89,6 +89,7 @@ public class Searchtest {
 		//Runs in a thread.
 		//---------------------------------------------------------------
 		//--------------------TESTING BODY-------------------------------
+<<<<<<< HEAD
 		while(true) {
 			color.identify(false, upMotor);
 			try {
@@ -96,6 +97,15 @@ public class Searchtest {
 			} catch (InterruptedException e) {
 			}
 		}
+=======
+//		while(true) {
+//			color.identify();
+//			try {
+//				Thread.sleep(3000);
+//			} catch (InterruptedException e) {
+//			}
+//		}
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		//------------------TESTING END
 		//----------------------------------------------------------------
 
@@ -110,7 +120,11 @@ public class Searchtest {
 		//Comment this when not needed.
 		//---------------------------------------------------------------
 		//--------------------TESTING BODY-------------------------------
+<<<<<<< HEAD
 		//SearchAndGrabTest();
+=======
+		SearchAndGrabTest();
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		//------------------TESTING END
 		//----------------------------------------------------------------
 

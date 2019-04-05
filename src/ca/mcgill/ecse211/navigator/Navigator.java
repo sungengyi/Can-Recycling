@@ -28,7 +28,11 @@ public class Navigator {
 	private static double WHEEL_RAD;
 	private double thetaDesired;//
 	private int deltax, deltay;
+<<<<<<< HEAD
 	private static final int FORWARD_SPEED = 320;
+=======
+	private static final int FORWARD_SPEED = 300;
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 	private static final int ROTATE_SPEED = 120;
 	private static final long NAVIGATION_PERIOD = 5000;
 	private static double[][] arr;
@@ -72,8 +76,13 @@ public class Navigator {
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 
+<<<<<<< HEAD
 		leftMotor.setAcceleration(5000);
 		rightMotor.setAcceleration(5000);
+=======
+		leftMotor.setAcceleration(2000);
+		rightMotor.setAcceleration(2000);
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 
 	}
 
@@ -144,7 +153,11 @@ public class Navigator {
 			
 			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
+<<<<<<< HEAD
 			if(isTunnelVertical) {
+=======
+			if(!isTunnelVertical) {
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 				DES_x = TN_LL_x-1.5;
 				DES_y = TN_LL_y+0.5;
 				DES_angle = 90;
@@ -201,6 +214,7 @@ public class Navigator {
 		
 			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(!isTunnelVertical) {
+<<<<<<< HEAD
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
 				DES_angle = 270;
@@ -394,6 +408,8 @@ public class Navigator {
 		
 			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(isTunnelVertical) {
+=======
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 				DES_x = TN_UR_x + 1.7;
 				DES_y = TN_UR_y - 0.7;
 				DES_angle = 270;
@@ -503,6 +519,10 @@ public class Navigator {
 		Sound.beep();
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 	/**
 	 * This method comes from SquareDriver class. It converts the desired distance
 	 * to the degrees of rotation of the motor.
@@ -572,7 +592,11 @@ public class Navigator {
 		return thetaDesired;
 	}
 	
+<<<<<<< HEAD
 	public void SearchAndGrabTest(EV3LargeRegulatedMotor ultraMotor,EV3LargeRegulatedMotor upMotor,ColorData color, SampleProvider sensor) throws InterruptedException {
+=======
+	public void SearchAndGrabTest(EV3LargeRegulatedMotor ultraMotor,EV3LargeRegulatedMotor upMotor,ColorData color, SampleProvider sensor) {
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		leftMotor.setSpeed(200);
 		rightMotor.setSpeed(200);
 		leftMotor.setAcceleration(10000);
@@ -591,7 +615,10 @@ public class Navigator {
 
 		weightingTest(ultraMotor, sensor);
 		ultraMotor.setSpeed(100);
+<<<<<<< HEAD
 		detectForCans(15, sensor);
+=======
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		
 		//go back for claw to grab
 		leftMotor.rotate((convertDistance(WHEEL_RAD,-CAN_RADIUS)),true);
@@ -622,24 +649,40 @@ public class Navigator {
 		ultraMotor.setSpeed(2000);
 		ultraMotor.setAcceleration(20000);
 		ultraMotor.rotate(20);
+<<<<<<< HEAD
 		HIT_GAP = getUSData(sensor);
 		ultraMotor.rotate(-20);
 		//leftMotor.rotate((convertAngle(WHEEL_RAD,TRACK,8)),true);
 		//rightMotor.rotate((convertAngle(WHEEL_RAD,TRACK,-8)),false);
+=======
+		ultraMotor.rotate(-20);
+		leftMotor.rotate((convertAngle(WHEEL_RAD,TRACK,8)),true);
+		rightMotor.rotate((convertAngle(WHEEL_RAD,TRACK,-8)),false);
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
 		
+<<<<<<< HEAD
 		
 		if(HIT_GAP < 3)  HEAVY=true;
 		else if(HIT_GAP > 15) HEAVY = false; HIT_GAP = 10;
+=======
+		HIT_GAP = getUSData(sensor);
+		if(HIT_GAP < 7)  HEAVY=true;
+		else if(HIT_GAP > 15) HEAVY = false; HIT_GAP = 15;
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 			
 		System.out.println("The can is "+HIT_GAP+"away.");
 		System.out.println("The can is "+ HEAVY);
 
 	}
+<<<<<<< HEAD
 	public void detectForCans(double range,SampleProvider sensor) throws InterruptedException {
+=======
+	public void detectForCans(double range,SampleProvider sensor) {
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		leftMotor.forward();
 		rightMotor.backward();
 		long start, end;
@@ -671,10 +714,13 @@ public class Navigator {
 				range /= 2;
 			}
 			end = System.currentTimeMillis();
+<<<<<<< HEAD
 			if(end - start < period) {
 				Thread.sleep((long) (period-end+start));
 				
 			}
+=======
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 			
 		}
 	}

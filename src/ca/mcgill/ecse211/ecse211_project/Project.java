@@ -58,7 +58,11 @@ public class Project {
 		public static double SZ_UR_y = 0;
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
+<<<<<<< HEAD
 	public static final double TRACK = 16.9;//Width of wheel axis
+=======
+	public static final double TRACK = 17;//Width of wheel axis
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 	public static final double TILE_SIZE = 30.48;
 	public static final double OFF_SET = 2.5; // this is the offset from the 2 line-detecting light sensors to the wheel
 
@@ -170,9 +174,15 @@ public class Project {
 		odoDisplay.start();
 
 		lcd.clear();
+<<<<<<< HEAD
 		//usLocal.fallingEdge();
 		//lightLocal.localize();
 		//Sound.beep();		
+=======
+		usLocal.fallingEdge();
+		lightLocal.localize();
+		Sound.beep();		
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		
 		@SuppressWarnings("resource")
 		SensorModes colorData = new EV3ColorSensor(colorPort);//lightSensor is the instance 
@@ -182,10 +192,17 @@ public class Project {
 		
 		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
+<<<<<<< HEAD
 		//oa.TravelToTunnel(lightLocal);
 		//oa.turnTo(oa.getDesAngle(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE));
 		//oa.travelTo(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE);
 		//oa.turnTo(0);
+=======
+		oa.TravelToTunnel(lightLocal);
+		oa.turnTo(oa.getDesAngle(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE));
+		oa.travelTo(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE);
+		oa.turnTo(0);
+>>>>>>> 33b3b51b271810ee2b2986ee4fca1e32a0f44bb0
 		oa.SearchAndGrabTest(ultraMotor,upMotor,color,frontUSDistance);
 	}
 	
