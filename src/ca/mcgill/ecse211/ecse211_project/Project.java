@@ -3,6 +3,7 @@ package ca.mcgill.ecse211.ecse211_project;
 import java.util.Map;
 
 import ca.mcgill.ecse211.WiFiClient.wifiTest.wifiTest;
+import ca.mcgill.ecse211.color.ColorData;
 import ca.mcgill.ecse211.color.Display;
 import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.localizer.UltrasonicLocalizer;
@@ -22,6 +23,7 @@ import lejos.robotics.SampleProvider;
 public class Project {
 	// The parameters for driving the robot
 		// The island parameters
+	
 	public static final int LOW_SPEED = 200; // this is the slow speed for precise movement
 	public static final int MEDIUM_SPEED = 300; // this is the medium speed for intermediate movement
 	public static final int HIGH_SPEED = 400; // this is the fast motor speed for less precious, faster movement (long
@@ -64,7 +66,7 @@ public class Project {
 	private static final Port leftLightPort = LocalEV3.get().getPort("S4");
 	private static final Port rightLightPort = LocalEV3.get().getPort("S1");
 	private static final Port frontUSPort = LocalEV3.get().getPort("S3");
-//	private static final Port backUSPort = LocalEV3.get().getPort("S2");
+	private static final Port colorPort = LocalEV3.get().getPort("S2");
 
 
 	//package-private
@@ -154,6 +156,7 @@ public class Project {
 		SensorModes rightLightSensor = new EV3ColorSensor(rightLightPort);//lightSensor is the instance 
 		SampleProvider  rightLightIntensity = rightLightSensor.getMode("Red");
 
+	
 		// Odometer related objects
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD); 
 
@@ -161,19 +164,29 @@ public class Project {
 		LightLocalizer lightLocal = new LightLocalizer(leftLightIntensity, rightLightIntensity, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		UltrasonicLocalizer usLocal = new UltrasonicLocalizer (frontUSDistance, odometer, leftMotor, rightMotor, TRACK, WHEEL_RAD );
 		Display odometryDisplay = new Display(lcd); // No need to change
+		Thread odoThread = new Thread(odometer);
+		odoThread.start();
 		Thread odoDisplay = new Thread(odometryDisplay);
 		odoDisplay.start();
 
 		lcd.clear();
-		Thread odoThread = new Thread(odometer);
-		odoThread.start();
 		usLocal.fallingEdge();
 		lightLocal.localize();
-		Sound.beep();
+		Sound.beep();		
+		
+		@SuppressWarnings("resource")
+		SensorModes colorData = new EV3ColorSensor(colorPort);//lightSensor is the instance 
+		SampleProvider colorSample = colorData.getMode("RGB");	
+		
+		ColorData color = new ColorData(colorSample);
+		
 		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
 		oa.TravelToTunnel(lightLocal);
+		oa.turnTo(oa.getDesAngle(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE));
+		oa.travelTo(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE);
+		oa.turnTo(0);
+		oa.SearchAndGrabTest(ultraMotor,upMotor,color,frontUSDistance);
 	}
-
-
+	
 }

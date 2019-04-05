@@ -3,6 +3,7 @@ package ca.mcgill.ecse211.color;
 import lejos.hardware.Sound;
 import ca.mcgill.ecse211.ecse211_project.*;
 import lejos.hardware.lcd.LCD;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class ColorData {
@@ -149,33 +150,37 @@ public class ColorData {
 	 * This method identidies a can's color by scanning 180 degrees around it and taking a large amount of data points.
 	 * Then it computes euclidean distanes and compares them, prints the color name on lcd screen.
 	 */
-	public void identify() {
+	public void identify(boolean isHeavy, EV3LargeRegulatedMotor upMotor) {
 		LCD.clear();
 		double redDist,greenDist,blueDist,yellowDist;
 		float [] RGBData;
-		Searchtest.upMotor.setSpeed(180);
+		upMotor.setSpeed(180);
 		LCD.drawString("Object Detected", 0, 0);
-		Searchtest.upMotor.rotate(-180,true);
+		upMotor.rotate(-180,true);
 		RGBData = calibrate();
 		redDist = EDistance(RGBData,RED_RANGE);
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
 		greenDist = EDistance(RGBData,GREEN_RANGE);
 		blueDist = EDistance(RGBData,BLUE_RANGE);
 		int color = smallestInInt(redDist,greenDist,blueDist,yellowDist);
-		if(Searchtest.HEAVY) {
+		if(isHeavy) {
 			if(color == RED) {
+				Sound.buzz();
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 			}else if( color == YELLOW) {
+				Sound.buzz();
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 			}else if(color == GREEN) {
+				Sound.buzz();
 				Sound.playTone(Sound.BEEP, 1000);
 				Sound.playTone(Sound.BEEP, 1000);
 			}else if(color == BLUE) {
+				Sound.buzz();
 				Sound.playTone(Sound.BEEP, 1000);
 			}else {
 				
@@ -201,7 +206,7 @@ public class ColorData {
 			}
 		}
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);
-		Searchtest.upMotor.rotate(180,false);
+		upMotor.rotate(180,false);
 	}
 	/**
 	 * This method takes in an integer as the specified color ID.
@@ -213,9 +218,9 @@ public class ColorData {
 		LCD.clear();
 		double redDist,greenDist,blueDist,yellowDist;
 		float [] RGBData;
-		Searchtest.upMotor.setSpeed(180);
+		Project.upMotor.setSpeed(180);
 		LCD.drawString("Object Detected", 0, 0);
-		Searchtest.upMotor.rotate(180,true);
+		Project.upMotor.rotate(180,true);
 		RGBData = calibrate();
 		redDist = EDistance(RGBData,RED_RANGE);
 		yellowDist = EDistance(RGBData,YELLOW_RANGE);
@@ -223,7 +228,7 @@ public class ColorData {
 		blueDist = EDistance(RGBData,BLUE_RANGE);
 		int result = smallestInInt(redDist,greenDist,blueDist,yellowDist);
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);		
-		Searchtest.upMotor.rotate(-180,false);
+		Project.upMotor.rotate(-180,false);
 		if(result == colorID) {
 			Sound.beep();
 		}else {

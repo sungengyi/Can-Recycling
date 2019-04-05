@@ -148,7 +148,7 @@ public class Searchtest {
 		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + 2*CAN_RADIUS))),false);
 
 		//identify
-		color.identify();
+	//	color.identify();
 		
 		leftMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),true);
 		rightMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),false);

@@ -1,10 +1,12 @@
 package ca.mcgill.ecse211.navigator;
 
+import ca.mcgill.ecse211.color.ColorData;
 import ca.mcgill.ecse211.ecse211_project.Project;
 import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.odometer.Odometer;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.robotics.SampleProvider;
 
 
 public class Navigator {
@@ -15,13 +17,18 @@ public class Navigator {
 	private static EV3LargeRegulatedMotor leftMotor;
 	private static EV3LargeRegulatedMotor rightMotor;
 	private boolean isNavigating = false; // deciding if turnTo or Travel to is called
+	
+	public static final double CAN_RADIUS = 5.5; // this is the offset from the 2 line-detecting light sensors to the wheel
+	public static double HIT_GAP =0; //Radius of wheel
+	public static boolean HEAVY = false;
+	
 	// It is initially false
 	private double xDesired, yDesired;
 	private final double TRACK;
 	private static double WHEEL_RAD;
 	private double thetaDesired;//
 	private int deltax, deltay;
-	private static final int FORWARD_SPEED = 250;
+	private static final int FORWARD_SPEED = 300;
 	private static final int ROTATE_SPEED = 120;
 	private static final long NAVIGATION_PERIOD = 5000;
 	private static double[][] arr;
@@ -65,8 +72,8 @@ public class Navigator {
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 
-		leftMotor.setAcceleration(500);
-		rightMotor.setAcceleration(500);
+		leftMotor.setAcceleration(2000);
+		rightMotor.setAcceleration(2000);
 
 	}
 
@@ -135,7 +142,7 @@ public class Navigator {
 //case (0,0)
 		if(corner == 0) {
 			
-			odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
+			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
 			if(!isTunnelVertical) {
 				DES_x = TN_LL_x-1.5;
@@ -164,7 +171,7 @@ public class Navigator {
 			
 			Sound.beep();
 			Sound.beep();
-			odometer.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
+			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
 			if(!isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
@@ -192,7 +199,7 @@ public class Navigator {
 		}
 		else if(corner == 2) {
 		
-			odometer.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
+			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
 			if(!isTunnelVertical) {
 				DES_x = TN_UR_x + 1.7;
 				DES_y = TN_UR_y - 0.7;
@@ -218,7 +225,7 @@ public class Navigator {
 			
 		}
 		else if(corner == 3) {
-			odometer.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
+			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
 			if(isTunnelVertical) {
 				DES_x = TN_UR_x - 0.5;
 				DES_y = TN_UR_y + 1.5;
@@ -303,14 +310,6 @@ public class Navigator {
 		Sound.beep();
 	}
 
-	/**
-	 * Return true if method in Navigator class is called.
-	 * 
-	 * @return
-	 */
-	public boolean isNavigating() {
-		return isNavigating;
-	}
 
 	/**
 	 * This method comes from SquareDriver class. It converts the desired distance
@@ -380,14 +379,114 @@ public class Navigator {
 		thetaDesired = (360+Math.toDegrees(thetaDesired))%360;
 		return thetaDesired;
 	}
+	
+	public void SearchAndGrabTest(EV3LargeRegulatedMotor ultraMotor,EV3LargeRegulatedMotor upMotor,ColorData color, SampleProvider sensor) {
+		leftMotor.setSpeed(200);
+		rightMotor.setSpeed(200);
+		leftMotor.setAcceleration(10000);
+		rightMotor.setAcceleration(10000);
+		upMotor.setSpeed(200);
 
-	public boolean checkifDone(double[] distance) {
+		//find the can and stop in front of it
+		detectForCans(43, sensor);
+		do {
+			leftMotor.forward();
+			rightMotor.forward();
+		}while(getUSData(sensor)<10000);
 
-		deltax = Math.abs((int) (xDesired - distance[0]));
-		deltay = Math.abs((int) (yDesired - distance[1]));
+		leftMotor.stop(true);
+		rightMotor.stop();
 
-		// if the current odo position is within 2 cm of the destination point
-		return (deltax < 2 && deltay < 2);
+		weightingTest(ultraMotor, sensor);
+		ultraMotor.setSpeed(100);
+		
+		//go back for claw to grab
+		leftMotor.rotate((convertDistance(WHEEL_RAD,-CAN_RADIUS)),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,-CAN_RADIUS)),false);
+
+		//open
+		ultraMotor.rotate(100);
+
+		//go forward
+		leftMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),false);
+
+		//identify
+		color.identify(HEAVY,upMotor);
+		
+		leftMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,CAN_RADIUS)),false);
+		//grab
+		ultraMotor.rotate(-100);
+		
+		leftMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),true);
+		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),false);
+		
+
+
 	}
+	public void weightingTest(EV3LargeRegulatedMotor ultraMotor, SampleProvider sensor) {
+		ultraMotor.setSpeed(2000);
+		ultraMotor.setAcceleration(20000);
+		ultraMotor.rotate(20);
+		ultraMotor.rotate(-20);
+		leftMotor.rotate((convertAngle(WHEEL_RAD,TRACK,8)),true);
+		rightMotor.rotate((convertAngle(WHEEL_RAD,TRACK,-8)),false);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
+		
+		HIT_GAP = getUSData(sensor);
+		if(HIT_GAP < 7)  HEAVY=true;
+		else if(HIT_GAP > 15) HEAVY = false; HIT_GAP = 15;
+			
+		System.out.println("The can is "+HIT_GAP+"away.");
+		System.out.println("The can is "+ HEAVY);
+
+	}
+	public void detectForCans(double range,SampleProvider sensor) {
+		leftMotor.forward();
+		rightMotor.backward();
+		long start, end;
+		double period = 50;
+		double distance;
+		boolean detected = false;
+		boolean switchs = true;
+		int counter = 0;
+		while(range > 5 && !detected) {
+			start = System.currentTimeMillis();
+			distance = getUSData(sensor);
+			if(distance>range) {
+				leftMotor.forward();
+				rightMotor.backward();
+			}
+			if(distance < 5) {
+				leftMotor.stop(true);
+				rightMotor.stop();
+				leftMotor.rotate(convertDistance(WHEEL_RAD, distance/2), true);
+				rightMotor.rotate(convertDistance(WHEEL_RAD, distance/2), false);
+				Sound.beep();
+				detected = true;
+			}
+			if(distance <= range && !detected) {
+				leftMotor.stop(true);
+				rightMotor.stop();
+				leftMotor.rotate(convertDistance(WHEEL_RAD, distance/2), true);
+				rightMotor.rotate(convertDistance(WHEEL_RAD, distance/2), false);
+				range /= 2;
+			}
+			end = System.currentTimeMillis();
+			
+		}
+	}
+	private static int getUSData(SampleProvider usDistance) {	
+		float[] usData = new float [usDistance.sampleSize()];
+		usDistance.fetchSample(usData, 0); // acquire data
+		int distance =  (int) (usData[0] * 100.0); // extract from buffer, cast to int
+		return distance;
+	}
+
+
 
 }
