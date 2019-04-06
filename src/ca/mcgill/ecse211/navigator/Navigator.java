@@ -146,7 +146,7 @@ public class Navigator {
 			
 			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 
-			if(isTunnelVertical) {
+			if(!isTunnelVertical) {
 
 				DES_x = TN_LL_x-1.5;
 				DES_y = TN_LL_y+0.5;
@@ -203,7 +203,7 @@ public class Navigator {
 		else if(corner == 2) {
 		
 			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
-			if(isTunnelVertical) {
+			if(!isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
 				DES_angle = 270;
