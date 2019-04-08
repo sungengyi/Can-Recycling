@@ -184,11 +184,16 @@ public class Project {
 		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
 
+		
 		oa.TravelToTunnel(lightLocal);
-		oa.turnTo(oa.getDesAngle(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE));
-		oa.travelTo(SZ_LL_x*TILE_SIZE,SZ_LL_y*TILE_SIZE);
-		oa.turnTo(0);
+		oa.TravelToSearchArea();
 		oa.SearchAndGrabTest(ultraMotor,upMotor,color,frontUSDistance);
+		oa.TravelBackToTunnel(lightLocal);
+		lightLocal.localize();
+		oa.TravelToBase();
+		oa.releaseCan(ultraMotor);
+		
+
 	}
 	
 }
