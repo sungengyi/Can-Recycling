@@ -347,20 +347,20 @@ public class Navigator {
 		double des_x = 0;
 		double des_y = 0;
 		if(corner == 0) {
-			des_x = LL_x;
-			des_y = LL_y;
+			des_x = LL_x+1;
+			des_y = LL_y+1;
 		}
 		else if(corner == 1) {
-			des_x = UR_x;
-			des_y = LL_y;
+			des_x = UR_x-1;
+			des_y = LL_y+1;
 		}
 		else if(corner == 2) {
-			des_x = UR_x;
-			des_y = UR_y;
+			des_x = UR_x-1;
+			des_y = UR_y-1;
 		}
 		else if(corner == 3) {
-			des_x = LL_x;
-			des_y = UR_y;
+			des_x = LL_x+1;
+			des_y = UR_y-1;
 		}
 		else {
 			System.out.print(" might as well die ");
