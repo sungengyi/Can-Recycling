@@ -4,6 +4,7 @@ import ca.mcgill.ecse211.color.ColorData;
 import ca.mcgill.ecse211.ecse211_project.Project;
 import ca.mcgill.ecse211.localizer.LightLocalizer;
 import ca.mcgill.ecse211.odometer.Odometer;
+import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
@@ -153,8 +154,8 @@ public class Navigator {
 				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_x = (LOC_x+0.45);
+				CEN_y = (LOC_y+0.61);
 				DEN_x = TN_UR_x+0.5;
 				DEN_y = TN_UR_y-0.5;
 			}
@@ -164,8 +165,8 @@ public class Navigator {
 				DES_angle = 0;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_x = (LOC_x-0.61);
+				CEN_y = (LOC_y+0.45);
 				DEN_x = TN_UR_x-0.5;
 				DEN_y = TN_UR_y+0.5;
 			}
@@ -181,8 +182,8 @@ public class Navigator {
 				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x-0.45);
+				CEN_y = (LOC_y-0.61);
 				DEN_x = TN_LL_x-0.5;
 				DEN_y = TN_LL_y+0.5;
 			}
@@ -193,8 +194,8 @@ public class Navigator {
 				DES_angle = 0;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_x = (LOC_x-0.61);
+				CEN_y = (LOC_y+0.45);
 				DEN_x = TN_UR_x-0.5;
 				DEN_y = TN_UR_y+0.5;
 
@@ -209,8 +210,8 @@ public class Navigator {
 				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x-0.45);
+				CEN_y = (LOC_y-0.61);
 				DEN_x = TN_LL_x-0.5;
 				DEN_y = TN_LL_y+0.5;
 			}
@@ -220,8 +221,8 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x+0.61);
+				CEN_y = (LOC_y-0.45);
 				DEN_x = TN_LL_x+0.5;
 				DEN_y = TN_LL_y-0.5;
 			}
@@ -235,8 +236,8 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x+0.61);
+				CEN_y = (LOC_y-0.45);
 				DEN_x = TN_LL_x + 0.5;
 				DEN_y = TN_LL_y - 0.5;
 			}
@@ -246,8 +247,8 @@ public class Navigator {
 				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_x = (LOC_x+0.45);
+				CEN_y = (LOC_y+0.61);
 				DEN_x = TN_UR_x+0.5;
 				DEN_y = TN_UR_y-0.5;
 			}
@@ -269,7 +270,9 @@ public class Navigator {
 		//		System.out.println("den x " + DEN_x);
 		//		System.out.println("den y " + DEN_y);
 
-
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
+		
 		turnTo(getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE));
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
 		//		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
@@ -306,6 +309,9 @@ public class Navigator {
 
 
 		turnTo(getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE));
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
+		Button.waitForAnyPress();
 		travelTo(DEN_x*TILE_SIZE, DEN_y*TILE_SIZE);
 		odo.setX(DEN_x*TILE_SIZE);
 		odo.setY(DEN_y*TILE_SIZE);
@@ -325,16 +331,16 @@ public class Navigator {
 			des_y = SZ_LL_y;
 		}
 		else if(corner == 1) {
-			des_x = SZ_UR_x;
+			des_x = SZ_LL_x;
 			des_y = SZ_LL_y;
 		}
 		else if (corner == 2) {
-			des_x = SZ_UR_x;
-			des_y = SZ_UR_y;
+			des_x = SZ_LL_x;
+			des_y = SZ_LL_y;
 		}
 		else if(corner == 3) {
 			des_x = SZ_LL_x;
-			des_y = SZ_UR_y;
+			des_y = SZ_LL_y;
 		}
 		else {
 			System.out.println("gg fam");
@@ -387,111 +393,110 @@ public class Navigator {
 		else
 			isTunnelVertical = true;
 		//case (0,0)
-		if(corner == 0) {
-
-			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
-
-			if(isTunnelVertical) {
-				DES_x = TN_LL_x+1.5;
-				DES_y = TN_LL_y-0.5;
-				DES_angle = 90;
+if(corner == 0) {
+			
+		
+			if(!isTunnelVertical) {
+				DES_x = TN_UR_x+1.5;
+				DES_y = TN_UR_y-0.5;
+				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
-				DEN_x = TN_UR_x-0.5;
-				DEN_y = TN_UR_y+0.5;
+				CEN_x = (LOC_x-0.45);
+				CEN_y = (LOC_y-0.61);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
 			}
 			else {
-				DES_x = TN_LL_x -0.5;
-				DES_y = TN_LL_y +1.5;
-				DES_angle = 0;
+				DES_x = TN_UR_x -0.5;
+				DES_y = TN_UR_y +1.5;
+				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x+0.61);
+				CEN_y = (LOC_y-0.45);
 				DEN_x = TN_UR_x+0.5;
 				DEN_y = TN_UR_y-0.5;
 			}
 		}
 		else if (corner == 1) {
-
-			Sound.beep();
-			Sound.beep();
-			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
-			if(isTunnelVertical) {
-				DES_x = TN_UR_x - 1.5;
-				DES_y = TN_UR_y + 0.5;
-				DES_angle = 270;
+			
+			
+			if(!isTunnelVertical) {
+				DES_x = TN_LL_x - 1.5;
+				DES_y = TN_LL_y + 0.5;
+				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_LL_x+0.5;
-				DEN_y = TN_LL_y-0.5;
-			}
-			else {
-
-				DES_x = TN_LL_x -0.5;
-				DES_y = TN_LL_y +1.5;
-				DES_angle = 0;
-				LOC_x = DES_x - 0.5;
-				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x+0.45);
+				CEN_y = (LOC_y+0.61);
 				DEN_x = TN_UR_x+0.5;
 				DEN_y = TN_UR_y-0.5;
 			}
-		}
-		else if(corner == 2) {
+			else {
 
-			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
-			if(isTunnelVertical) {
-				DES_x = TN_UR_x - 1.5;
-				DES_y = TN_UR_y + 0.5;
-				DES_angle = 270;
-				LOC_x = DES_x + 0.5;
+				DES_x = TN_UR_x -0.5;
+				DES_y = TN_UR_y +1.5;
+				DES_angle = 180;
+				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.5);
-				CEN_y = (LOC_y+0.5);
+				CEN_x = (LOC_x+0.61);
+				CEN_y = (LOC_y-0.45);
 				DEN_x = TN_LL_x+0.5;
 				DEN_y = TN_LL_y-0.5;
-			}
-			else {
-				DES_x = TN_UR_x + 0.5;
-				DES_y = TN_UR_y - 1.5;
-				DES_angle = 180;
-				LOC_x = DES_x + 0.5;
-				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_LL_x-0.5;
-				DEN_y = TN_LL_y+0.5;
+				
 			}
 		}
-		else if(corner == 3) {
-			odo.setXYT(TILE_SIZE, 8*TILE_SIZE, 90);
-			if(isTunnelVertical) {
-				DES_x = TN_UR_x + 0.5;
-				DES_y = TN_UR_y - 1.5;
-				DES_angle = 180;
+		else if(corner == 2) {
+		
+			
+			if(!isTunnelVertical) {
+				DES_x = TN_LL_x - 1.5;
+				DES_y = TN_LL_y + 0.5;
+				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
-				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y+0.5);
-				DEN_x = TN_LL_x - 0.5;
-				DEN_y = TN_LL_y + 0.5;
+				LOC_y = DES_y - 0.5;
+				CEN_x = (LOC_x+0.45);
+				CEN_y = (LOC_y+0.61);
+				DEN_x = TN_UR_x+0.5;
+				DEN_y = TN_UR_y-0.5;
 			}
 			else {
-				DES_x = TN_LL_x + 1.5;
-				DES_y = TN_LL_y - 0.5;
-				DES_angle = 90;
-				LOC_x = DES_x - 0.5;
+				DES_x = TN_LL_x + 0.5;
+				DES_y = TN_LL_y - 1.5;
+				DES_angle = 0;
+				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.5);
-				CEN_y = (LOC_y-0.5);
+				CEN_x = (LOC_x-0.61);
+				CEN_y = (LOC_y+0.45);
 				DEN_x = TN_UR_x-0.5;
 				DEN_y = TN_UR_y+0.5;
+			}
+			
+		}
+		else if(corner == 3) {
+			
+			if(isTunnelVertical) {
+				DES_x = TN_LL_x + 0.5;
+				DES_y = TN_LL_y - 1.5;
+				DES_angle = 0;
+				LOC_x = DES_x + 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.61);
+				CEN_y = (LOC_y+0.45);
+				DEN_x = TN_UR_x - 0.5;
+				DEN_y = TN_UR_y + 0.5;
+			}
+			else {
+				DES_x = TN_UR_x + 1.5;
+				DES_y = TN_UR_y - 0.5;
+				DES_angle = 270;
+				LOC_x = DES_x - 0.5;
+				LOC_y = DES_y + 0.5;
+				CEN_x = (LOC_x-0.45);
+				CEN_y = (LOC_y-0.61);
+				DEN_x = TN_LL_x-0.5;
+				DEN_y = TN_LL_y+0.5;
 			}
 		}
 		else {
@@ -543,7 +548,12 @@ public class Navigator {
 
 
 		turnTo(getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE));
+		leftMotor.setSpeed(FORWARD_SPEED+60);
+		rightMotor.setSpeed(FORWARD_SPEED+60);
+		Button.waitForAnyPress();
 		travelTo(DEN_x*TILE_SIZE, DEN_y*TILE_SIZE);
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
 		odo.setX(DEN_x*TILE_SIZE);
 		odo.setY(DEN_y*TILE_SIZE);
 		//		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
@@ -671,6 +681,7 @@ public class Navigator {
 		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),false);
 
 
+		Button.waitForAnyPress();
 
 	}
 	public void weightingTest(EV3LargeRegulatedMotor ultraMotor, SampleProvider sensor) {
@@ -688,7 +699,7 @@ public class Navigator {
 		}
 
 
-		if(HIT_GAP < 3)  HEAVY=true;
+		if(HIT_GAP < 5)  HEAVY=true;
 		else if(HIT_GAP > 15) HEAVY = false; HIT_GAP = 10;
 
 
