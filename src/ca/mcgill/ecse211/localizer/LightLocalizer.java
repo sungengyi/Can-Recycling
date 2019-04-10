@@ -12,7 +12,7 @@ public class LightLocalizer{
 	private final double TRACK;
 	private static final double SENSOR_GAP = 3.2; //The width of wheel axis
 	private final double WHEEL_RAD; //The radius of wheel
-	private static final int ROTATE_SPEED = 120; //Speed of robot
+	private static final int ROTATE_SPEED = 125; //Speed of robot
 
 	/**
 	 * Default constructor initializes all fields of LightLocalizer.

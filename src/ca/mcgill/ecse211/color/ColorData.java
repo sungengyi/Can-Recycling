@@ -230,9 +230,8 @@ public class ColorData {
 		LCD.drawString(smallest(redDist,greenDist,blueDist,yellowDist), 0, 1);		
 		Project.upMotor.rotate(-180,false);
 		if(result == colorID) {
-			Sound.beep();
+			
 		}else {
-			Sound.twoBeeps();
 		}
 
 	}

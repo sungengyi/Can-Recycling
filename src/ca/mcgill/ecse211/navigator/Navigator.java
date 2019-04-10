@@ -172,9 +172,6 @@ public class Navigator {
 			}
 		}
 		else if (corner == 1) {
-
-			Sound.beep();
-			Sound.beep();
 			odo.setXYT(14*TILE_SIZE, TILE_SIZE, 270);
 			if(!isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
@@ -182,8 +179,8 @@ public class Navigator {
 				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.45);
-				CEN_y = (LOC_y-0.61);
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_LL_x-0.5;
 				DEN_y = TN_LL_y+0.5;
 			}
@@ -194,8 +191,8 @@ public class Navigator {
 				DES_angle = 0;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.61);
-				CEN_y = (LOC_y+0.45);
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y+0.5);
 				DEN_x = TN_UR_x-0.5;
 				DEN_y = TN_UR_y+0.5;
 
@@ -204,14 +201,14 @@ public class Navigator {
 		else if(corner == 2) {
 
 			odo.setXYT(14*TILE_SIZE, 8*TILE_SIZE, 180);
-			if(!isTunnelVertical) {
+			if(isTunnelVertical) {
 				DES_x = TN_UR_x + 1.5;
 				DES_y = TN_UR_y - 0.5;
 				DES_angle = 270;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y + 0.5;
-				CEN_x = (LOC_x-0.45);
-				CEN_y = (LOC_y-0.61);
+				CEN_x = (LOC_x-0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_LL_x-0.5;
 				DEN_y = TN_LL_y+0.5;
 			}
@@ -221,8 +218,8 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.61);
-				CEN_y = (LOC_y-0.45);
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_LL_x+0.5;
 				DEN_y = TN_LL_y-0.5;
 			}
@@ -236,8 +233,8 @@ public class Navigator {
 				DES_angle = 180;
 				LOC_x = DES_x - 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.61);
-				CEN_y = (LOC_y-0.45);
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y-0.5);
 				DEN_x = TN_LL_x + 0.5;
 				DEN_y = TN_LL_y - 0.5;
 			}
@@ -247,38 +244,21 @@ public class Navigator {
 				DES_angle = 90;
 				LOC_x = DES_x + 0.5;
 				LOC_y = DES_y - 0.5;
-				CEN_x = (LOC_x+0.45);
-				CEN_y = (LOC_y+0.61);
+				CEN_x = (LOC_x+0.5);
+				CEN_y = (LOC_y+0.5);
 				DEN_x = TN_UR_x+0.5;
 				DEN_y = TN_UR_y-0.5;
 			}
 		}
 		else {
-			Sound.buzz();
 		}
 
-		//Sound.beep();
-		//		System.out.print("vertical: " + isTunnelVertical);
-		//
-		//		System.out.print(DES_x + " des x");
-		//		System.out.print(DES_y + " des y");
-		//		System.out.println(DES_angle + " angle");
-		//		System.out.println("loc x" + LOC_x);
-		//		System.out.println("loc y"  + LOC_y);
-		//		System.out.println("CEN x " + CEN_x);
-		//		System.out.println("cen y" + CEN_y);
-		//		System.out.println("den x " + DEN_x);
-		//		System.out.println("den y " + DEN_y);
 
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 		
 		turnTo(getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE));
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
-		//		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("DES_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle "+ odo.getT());
-
 
 		turnTo(DES_angle);
 		lightLocal.localize();
@@ -291,63 +271,75 @@ public class Navigator {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
-		//		System.out.println("LOC_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("LOC_y"+odo.getY()/TILE_SIZE);
+		
 		odo.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
 
 
 
-
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE));
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(CEN_x*TILE_SIZE, CEN_y*TILE_SIZE);
 		odo.setX(CEN_x*TILE_SIZE);
 		odo.setY(CEN_y*TILE_SIZE);
-		//		System.out.println("CEN_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("CEN_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle "+ odo.getT());
 
-
-
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE));
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
-		Button.waitForAnyPress();
+	//	Button.waitForAnyPress();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(DEN_x*TILE_SIZE, DEN_y*TILE_SIZE);
 		odo.setX(DEN_x*TILE_SIZE);
 		odo.setY(DEN_y*TILE_SIZE);
-		//		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("DEN_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle"+odo.getT());
-
-
-		Sound.beep();
-		Sound.beep();
 	}
 	public void TravelToSearchArea() {
 		double des_x  = 0;
 		double des_y = 0;
-		if(corner == 0) {
-			des_x = SZ_LL_x;
-			des_y = SZ_LL_y;
-		}
-		else if(corner == 1) {
-			des_x = SZ_LL_x;
-			des_y = SZ_LL_y;
-		}
-		else if (corner == 2) {
-			des_x = SZ_LL_x;
-			des_y = SZ_LL_y;
-		}
-		else if(corner == 3) {
-			des_x = SZ_LL_x;
-			des_y = SZ_LL_y;
-		}
-		else {
-			System.out.println("gg fam");
+		des_x = SZ_LL_x + (SZ_UR_x-SZ_LL_x)/2;
+		des_y = SZ_LL_y + (SZ_UR_y - SZ_LL_y)/2;
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		turnTo(getDesAngle(des_x*TILE_SIZE,des_y*TILE_SIZE));
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(des_x*TILE_SIZE,des_y*TILE_SIZE);
-		turnTo(0);		
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		odo.setX(des_x*TILE_SIZE);
+		odo.setY(des_y*TILE_SIZE);
 	}
 	public void TravelToBase() {
 		double des_x = 0;
@@ -371,7 +363,19 @@ public class Navigator {
 		else {
 			System.out.print(" might as well die ");
 		}
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(getDesAngle(SZ_LL_x*des_x,des_y*TILE_SIZE));
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(des_x*TILE_SIZE,des_y*TILE_SIZE);
 	}
 	public void TravelBackToTunnel(LightLocalizer lightLocal) {
@@ -500,69 +504,79 @@ if(corner == 0) {
 			}
 		}
 		else {
-			Sound.buzz();
 		}
-
-		//Sound.beep();
-		//		System.out.print("vertical: " + isTunnelVertical);
-		//
-		//		System.out.print(DES_x + " des x");
-		//		System.out.print(DES_y + " des y");
-		//		System.out.println(DES_angle + " angle");
-		//		System.out.println("loc x" + LOC_x);
-		//		System.out.println("loc y"  + LOC_y);
-		//		System.out.println("CEN x " + CEN_x);
-		//		System.out.println("cen y" + CEN_y);
-		//		System.out.println("den x " + DEN_x);
-		//		System.out.println("den y " + DEN_y);
-
-
+	try {
+		Thread.sleep(200);
+	} catch (InterruptedException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 		turnTo(getDesAngle(DES_x*TILE_SIZE,DES_y*TILE_SIZE));
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(DES_x*TILE_SIZE, DES_y*TILE_SIZE);
-		//		System.out.println("DES_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("DES_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle "+ odo.getT());
 
-
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(DES_angle);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		lightLocal.localize();
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
-		//		System.out.println("LOC_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("LOC_y"+odo.getY()/TILE_SIZE);
 		odo.setXYT((LOC_x)*TILE_SIZE, LOC_y*TILE_SIZE, DES_angle);
-
-
-
-
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(getDesAngle(CEN_x*TILE_SIZE,CEN_y*TILE_SIZE));
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(CEN_x*TILE_SIZE, CEN_y*TILE_SIZE);
 		odo.setX(CEN_x*TILE_SIZE);
 		odo.setY(CEN_y*TILE_SIZE);
-		//		System.out.println("CEN_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("CEN_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle "+ odo.getT());
-
-
-
+	
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		turnTo(getDesAngle(DEN_x*TILE_SIZE,DEN_y*TILE_SIZE));
 		leftMotor.setSpeed(FORWARD_SPEED+60);
 		rightMotor.setSpeed(FORWARD_SPEED+60);
-		Button.waitForAnyPress();
+		//Button.waitForAnyPress();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		travelTo(DEN_x*TILE_SIZE, DEN_y*TILE_SIZE);
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 		odo.setX(DEN_x*TILE_SIZE);
 		odo.setY(DEN_y*TILE_SIZE);
-		//		System.out.println("DEN_x"+odo.getX()/TILE_SIZE);
-		//		System.out.println("DEN_y"+odo.getY()/TILE_SIZE);
-		//		System.out.println("Angle"+odo.getT());
-
-
-		Sound.beep();
-		Sound.beep();
 	}
 
 
@@ -679,10 +693,6 @@ if(corner == 0) {
 
 		leftMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),true);
 		rightMotor.rotate((convertDistance(WHEEL_RAD,(HIT_GAP + CAN_RADIUS))),false);
-
-
-		Button.waitForAnyPress();
-
 	}
 	public void weightingTest(EV3LargeRegulatedMotor ultraMotor, SampleProvider sensor) {
 		ultraMotor.setSpeed(2000);
@@ -690,8 +700,6 @@ if(corner == 0) {
 		ultraMotor.rotate(20);
 		HIT_GAP = getUSData(sensor);
 		ultraMotor.rotate(-20);
-		//leftMotor.rotate((convertAngle(WHEEL_RAD,TRACK,8)),true);
-		//rightMotor.rotate((convertAngle(WHEEL_RAD,TRACK,-8)),false);
 
 		try {
 			Thread.sleep(500);
@@ -701,11 +709,6 @@ if(corner == 0) {
 
 		if(HIT_GAP < 5)  HEAVY=true;
 		else if(HIT_GAP > 15) HEAVY = false; HIT_GAP = 10;
-
-
-		System.out.println("The can is "+HIT_GAP+"away.");
-		System.out.println("The can is "+ HEAVY);
-
 	}
 	public void detectForCans(double range,SampleProvider sensor) throws InterruptedException {
 
@@ -729,7 +732,6 @@ if(corner == 0) {
 				rightMotor.stop();
 				leftMotor.rotate(convertDistance(WHEEL_RAD, distance/2), true);
 				rightMotor.rotate(convertDistance(WHEEL_RAD, distance/2), false);
-				Sound.beep();
 				detected = true;
 			}
 			if(distance <= range && !detected) {

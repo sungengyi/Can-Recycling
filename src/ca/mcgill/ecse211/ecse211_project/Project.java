@@ -58,7 +58,7 @@ public class Project {
 		public static double SZ_UR_y = 0;
 	//TESTED CONSTANTS, DO NOT CHANGE
 	public static final double WHEEL_RAD = 2.1; //Radius of wheel
-	public static final double TRACK = 16.9;//Width of wheel axis
+	public static final double TRACK = 16.29;//Width of wheel axis
 	public static final double TILE_SIZE = 30.48;
 	public static final double OFF_SET = 2.5; // this is the offset from the 2 line-detecting light sensors to the wheel
 
@@ -172,9 +172,17 @@ public class Project {
 		lcd.clear();
 
 		usLocal.fallingEdge();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		lightLocal.localize();
-		Sound.beep();		
-		
+		Sound.beep();	
+		Sound.beep();	
+		Sound.beep();	
+
 		@SuppressWarnings("resource")
 		SensorModes colorData = new EV3ColorSensor(colorPort);//lightSensor is the instance 
 		SampleProvider colorSample = colorData.getMode("RGB");	
@@ -184,14 +192,68 @@ public class Project {
 		Navigator oa = new Navigator(odometer,leftMotor, rightMotor, TRACK,WHEEL_RAD);
 		Sound.beep();
 
-		
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		oa.TravelToTunnel(lightLocal);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		double left = lightLocal.getLightData(leftLightIntensity);
+		double right = lightLocal.getLightData(rightLightIntensity);
+		lightLocal.correction(left, right);
+		
 		oa.TravelToSearchArea();
+		Sound.beep();	
+		Sound.beep();	
+		Sound.beep();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		oa.SearchAndGrabTest(ultraMotor,upMotor,color,frontUSDistance);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		oa.TravelBackToTunnel(lightLocal);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		lightLocal.localize();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		oa.TravelToBase();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		oa.releaseCan(ultraMotor);
+		Sound.beep();	
+		Sound.beep();	
+		Sound.beep();
+		Sound.beep();	
+		Sound.beep();	
 
 		
 
